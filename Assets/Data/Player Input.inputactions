@@ -1,0 +1,83 @@
+{
+    "name": "Player Input",
+    "maps": [
+        {
+            "name": "In Game",
+            "id": "d7f252cc-4dcd-4667-8753-ff1cf95f1583",
+            "actions": [
+                {
+                    "name": "Regenerate Sprite",
+                    "type": "Button",
+                    "id": "ee0023ad-fccc-466e-97e5-3cb1ad0d4a86",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Next Animation",
+                    "type": "Button",
+                    "id": "40779d8b-a25d-4acb-919f-6b36d0e66f1e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Previous Animation",
+                    "type": "Button",
+                    "id": "3f2b3602-e6c9-4f45-a444-10df08ba368a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "41b69523-6a04-48d2-9503-6eb81986336c",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Regenerate Sprite",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c72cf23e-953b-4772-86ed-e862b3daac9c",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Next Animation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1a8573df-f3ff-43d4-965c-f56340ab1dc0",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Previous Animation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Keyboard",
+            "bindingGroup": "Keyboard",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
