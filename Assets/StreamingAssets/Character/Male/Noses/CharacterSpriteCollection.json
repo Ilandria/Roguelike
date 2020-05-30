@@ -1,0 +1,22 @@
+{
+	"Type":"MaleNose",
+	"SpriteSheets":
+	[
+		{
+			"Name":"None",
+			"FileName":"None.png"
+		},
+		{
+			"Name":"Big",
+			"FileName":"Big.png"
+		},
+		{
+			"Name":"Button",
+			"FileName":"Button.png"
+		},
+		{
+			"Name":"Straight",
+			"FileName":"Straight.png"
+		}
+	]
+}

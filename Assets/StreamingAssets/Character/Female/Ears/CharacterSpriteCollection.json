@@ -1,0 +1,18 @@
+{
+	"Type":"FemaleEars",
+	"SpriteSheets":
+	[
+		{
+			"Name":"Elf",
+			"FileName":"Elf.png"
+		},
+		{
+			"Name":"Human",
+			"FileName":"Human.png"
+		},
+		{
+			"Name":"None",
+			"FileName":"None.png"
+		}
+	]
+}

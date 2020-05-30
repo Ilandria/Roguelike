@@ -1,0 +1,130 @@
+{
+	"Type":"FemaleHair",
+	"SpriteSheets":
+	[
+		{
+			"Name":"Bald",
+			"FileName":"bald.png"
+		},
+		{
+			"Name":"Bangs",
+			"FileName":"bangs.png"
+		},
+		{
+			"Name":"Long Bangs",
+			"FileName":"bangslong.png"
+		},
+		{
+			"Name":"Long Bangs 2",
+			"FileName":"bangslong2.png"
+		},
+		{
+			"Name":"Short Bangs",
+			"FileName":"bangsshort.png"
+		},
+		{
+			"Name":"Extra Long",
+			"FileName":"xlong.png"
+		},
+		{
+			"Name":"Bed Head",
+			"FileName":"bedhead.png"
+		},
+		{
+			"Name":"Bunches",
+			"FileName":"bunches.png"
+		},
+		{
+			"Name":"Aphro",
+			"FileName":"jewfro.png"
+		},
+		{
+			"Name":"Long",
+			"FileName":"long.png"
+		},
+		{
+			"Name":"Long Hawk",
+			"FileName":"longhawk.png"
+		},
+		{
+			"Name":"Short Hawk",
+			"FileName":"shorthawk.png"
+		},
+		{
+			"Name":"Long Knotted",
+			"FileName":"longknot.png"
+		},
+		{
+			"Name":"Short Knotted",
+			"FileName":"shortknot.png"
+		},
+		{
+			"Name":"Very Long Knotted",
+			"FileName":"xlongknot.png"
+		},
+		{
+			"Name":"Loose",
+			"FileName":"loose.png"
+		},
+		{
+			"Name":"Messy",
+			"FileName":"messy1.png"
+		},
+		{
+			"Name":"Messy 2",
+			"FileName":"messy2.png"
+		},
+		{
+			"Name":"Mohawk",
+			"FileName":"mohawk.png"
+		},
+		{
+			"Name":"Page",
+			"FileName":"page.png"
+		},
+		{
+			"Name":"Page 2",
+			"FileName":"page2.png"
+		},
+		{
+			"Name":"Parted",
+			"FileName":"parted.png"
+		},
+		{
+			"Name":"Pixie Cut",
+			"FileName":"pixie.png"
+		},
+		{
+			"Name":"Plain",
+			"FileName":"plain.png"
+		},
+		{
+			"Name":"Ponytail",
+			"FileName":"ponytail.png"
+		},
+		{
+			"Name":"Ponytail 2",
+			"FileName":"ponytail2.png"
+		},
+		{
+			"Name":"Princess",
+			"FileName":"princess.png"
+		},
+		{
+			"Name":"Left Shoulder",
+			"FileName":"shoulderl.png"
+		},
+		{
+			"Name":"Right Shoulder",
+			"FileName":"shoulderr.png"
+		},
+		{
+			"Name":"Swoop",
+			"FileName":"swoop.png"
+		},
+		{
+			"Name":"Unkempt",
+			"FileName":"unkempt.png"
+		}
+	]
+}

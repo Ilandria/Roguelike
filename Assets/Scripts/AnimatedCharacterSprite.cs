@@ -11,22 +11,22 @@ namespace CCB.Roguelike
 		private SpriteBuilder spriteBuilder = null;
 
 		[SerializeField]
-		private SpriteSheetDescription spriteSheetDescription = null;
+		private CharacterSpriteComponents sprites = null;
 
 		[SerializeField]
-		private Texture2D bodySheet = null;
+		private string bodyName = string.Empty;
 
 		[SerializeField]
-		private Texture2D earSheet = null;
+		private string earName = string.Empty;
 
 		[SerializeField]
-		private Texture2D noseSheet = null;
+		private string noseName = string.Empty;
 
 		[SerializeField]
-		private Texture2D eyeSheet = null;
+		private string eyeName = string.Empty;
 
 		[SerializeField]
-		private Texture2D hairSheet = null;
+		private string hairName = string.Empty;
 
 		[SerializeField]
 		private Color skinColour = Color.white;
@@ -52,22 +52,24 @@ namespace CCB.Roguelike
 		private void Awake()
 		{
 			spriteRenderer = GetComponent<SpriteRenderer>();
-			spriteSheet = new Texture2D(bodySheet.width, bodySheet.height, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
-			StartCoroutine(BuildNewSprite());
+			spriteSheet = new Texture2D(sprites.SheetDescription.SpriteSheetSize.x, sprites.SheetDescription.SpriteSheetSize.y, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
 		}
 
 		private void FixedUpdate()
 		{
-			tickCounter = ++tickCounter % ticksPerFrame;
-
-			if (tickCounter == 0)
+			if (animations != null)
 			{
-				currentFrame = ++currentFrame % animations[currentAnimation].Length;
-				spriteRenderer.sprite = animations[currentAnimation][currentFrame];
+				tickCounter = ++tickCounter % ticksPerFrame;
+
+				if (tickCounter == 0)
+				{
+					currentFrame = ++currentFrame % animations[currentAnimation].Length;
+					spriteRenderer.sprite = animations[currentAnimation][currentFrame];
+				}
 			}
 		}
 
-		public void OnRegenerateSprite()
+		public void RegenerateSprite()
 		{
 			StartCoroutine(BuildNewSprite());
 		}
@@ -90,15 +92,16 @@ namespace CCB.Roguelike
 		{
 			int id = GetInstanceID();
 			yield return new WaitUntil(() => spriteBuilder.StartBuild(id, spriteSheet.width, spriteSheet.height));
-			spriteBuilder.AddLayer(id, bodySheet, skinColour);
-			spriteBuilder.AddLayer(id, noseSheet, skinColour);
-			spriteBuilder.AddLayer(id, eyeSheet, eyeColour);
-			spriteBuilder.AddLayer(id, hairSheet, hairColour);
-			spriteBuilder.AddLayer(id, earSheet, skinColour);
+			// Todo: Find a better way to handle sex - ideally be able to send in a "male" or "female" flag instead of per-type. Maybe split parts and sex into 2 enums.
+			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleBody, bodyName).SpriteSheet, skinColour);
+			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleNose, noseName).SpriteSheet, skinColour);
+			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleEyes, eyeName).SpriteSheet, eyeColour);
+			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleHair, hairName).SpriteSheet, hairColour);
+			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleEars, earName).SpriteSheet, skinColour);
 			spriteBuilder.PauseBuild(id);
 			yield return new WaitForEndOfFrame();
 			spriteBuilder.FinishBuild(id, spriteSheet);
-			animations = spriteBuilder.CreateAnimationSpriteSet(spriteSheetDescription, spriteSheet);
+			animations = spriteBuilder.CreateAnimationSpriteSet(sprites.SheetDescription, spriteSheet);
 			currentFrame = 0;
 			tickCounter = 0;
 		}

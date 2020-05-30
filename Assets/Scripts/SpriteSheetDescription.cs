@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace CCB.Roguelike
@@ -7,6 +6,10 @@ namespace CCB.Roguelike
 	[CreateAssetMenu(fileName = "New Sprite Builder Definition", menuName = "CCB/Data/Sprite Builder Definition")]
 	public class SpriteSheetDescription : ScriptableObject
 	{
+		[SerializeField]
+		private Vector2Int spriteSheetSize = Vector2Int.zero;
+		public Vector2Int SpriteSheetSize => spriteSheetSize;
+
 		[SerializeField]
 		private Vector2Int spriteSize = Vector2Int.zero;
 		public Vector2Int SpriteSize => spriteSize;

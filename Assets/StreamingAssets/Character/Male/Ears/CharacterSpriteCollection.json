@@ -1,0 +1,18 @@
+{
+	"type":"MaleEars",
+	"spriteSheets":
+	[
+		{
+			"Name":"Elf",
+			"fileName":"Elf.png"
+		},
+		{
+			"Name":"Human",
+			"fileName":"Human.png"
+		},
+		{
+			"Name":"None",
+			"fileName":"None.png"
+		}
+	]
+}

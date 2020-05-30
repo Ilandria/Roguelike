@@ -1,0 +1,10 @@
+{
+	"Type":"MaleEyes",
+	"SpriteSheets":
+	[
+		{
+			"Name":"Default",
+			"FileName":"Default.png"
+		}
+	]
+}

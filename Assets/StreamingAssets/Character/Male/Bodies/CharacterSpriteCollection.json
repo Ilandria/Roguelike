@@ -1,0 +1,22 @@
+{
+	"Type":"MaleBody",
+	"SpriteSheets":
+	[
+		{
+			"Name":"Elf",
+			"FileName":"Elf.png"
+		},
+		{
+			"Name":"Human",
+			"FileName":"Human.png"
+		},
+		{
+			"Name":"Orc",
+			"FileName":"Orc.png"
+		},
+		{
+			"Name":"Skeleton",
+			"FileName":"Skeleton.png"
+		}
+	]
+}

@@ -7,7 +7,7 @@ namespace CCB.Roguelike
 	public class SpriteBuilder : ScriptableObject
 	{
 		[SerializeField]
-		private Material spriteMaterial;
+		private Material spriteMaterial = null;
 
 		private RenderTexture previousRenderTexture = null;
 		private RenderTexture blitTarget = null;
@@ -78,6 +78,11 @@ namespace CCB.Roguelike
 			}
 
 			return new AnimationSpriteSet(animations);
+		}
+
+		private void OnEnable()
+		{
+			inUseBy = - 1;
 		}
 	}
 }

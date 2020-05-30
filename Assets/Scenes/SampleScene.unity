@@ -204,6 +204,116 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &573883881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 573883883}
+  - component: {fileID: 573883882}
+  m_Layer: 0
+  m_Name: Loader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &573883882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573883881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f1d80809ca517f4da015f9c83753862, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugTextRenderer: {fileID: 592283940}
+  loadables:
+  - {fileID: 11400000, guid: 76c131e064772ca45a05725f142e3cae, type: 2}
+  loadOnAwake: 1
+  loadProgress: 0
+  loadStatus: 
+  onLoadComplete:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1624956065}
+        m_MethodName: RegenerateSprite
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!4 &573883883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573883881}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &592283939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 592283941}
+  - component: {fileID: 592283940}
+  m_Layer: 0
+  m_Name: Debug Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &592283940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592283939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be306f0b672c349428efc90779dd60d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenEdgeOffset: {x: 5, y: 0}
+  elementSize: {x: 400, y: 20}
+  spacing: 0
+  debugTexts: []
+--- !u!4 &592283941
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592283939}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1624956063
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,13 +360,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteBuilder: {fileID: 11400000, guid: 0ff501afb044217498c384f10a26302c, type: 2}
-  spriteSheetDescription: {fileID: 11400000, guid: 10e1ab7b9651cf24cb8d9ec0834e54c1,
-    type: 2}
-  bodySheet: {fileID: 2800000, guid: a3afdff79a9fc7f4c9f200d1abf49241, type: 3}
-  earSheet: {fileID: 2800000, guid: 29d876468583dcf4dacb1b0794346425, type: 3}
-  noseSheet: {fileID: 2800000, guid: a402d3cd4d5311542ba6103acf0565cf, type: 3}
-  eyeSheet: {fileID: 2800000, guid: acfe1d1ed1850af4383fbd13790fb8ee, type: 3}
-  hairSheet: {fileID: 2800000, guid: 06a598db9096eae4daa5866189bf0b9a, type: 3}
+  sprites: {fileID: 11400000, guid: 76c131e064772ca45a05725f142e3cae, type: 2}
+  bodyName: Human
+  earName: None
+  noseName: Button
+  eyeName: Default
+  hairName: Messy
   skinColour: {r: 0.9245283, g: 0.73277617, b: 0.5451228, a: 1}
   eyeColour: {r: 0.43867922, g: 0.6964213, b: 1, a: 1}
   hairColour: {r: 0.9056604, g: 0.10534264, b: 0.029903898, a: 1}

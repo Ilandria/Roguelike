@@ -1,0 +1,10 @@
+{
+	"Type":"FemaleEyes",
+	"SpriteSheets":
+	[
+		{
+			"Name":"Default",
+			"FileName":"Default.png"
+		}
+	]
+}
