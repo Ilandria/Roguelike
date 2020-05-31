@@ -50,6 +50,7 @@ namespace CCB.Roguelike
 		private void Awake()
 		{
 			spriteRenderer = GetComponent<SpriteRenderer>();
+			OnRegenerateSprite();
 		}
 
 		private void FixedUpdate()
@@ -75,20 +76,6 @@ namespace CCB.Roguelike
 				currentFrame = 0;
 				tickCounter = 0;
 			});
-		}
-
-		public void OnNextAnimation()
-		{
-			currentFrame = 0;
-			tickCounter = 0;
-			currentAnimation = (AnimationType)((int)++currentAnimation % Enum.GetNames(typeof(AnimationType)).Length);
-		}
-
-		public void OnPreviousAnimation()
-		{
-			currentFrame = 0;
-			tickCounter = 0;
-			currentAnimation = --currentAnimation >= 0 ? currentAnimation : (AnimationType)(Enum.GetNames(typeof(AnimationType)).Length - 1);
 		}
 	}
 }

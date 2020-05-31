@@ -30,6 +30,12 @@ namespace CCB.Roguelike
 		public string LoadStatus => loadStatus;
 
 		[SerializeField]
+		private UnityEvent onLoadStart = null;
+
+		[SerializeField]
+		private UnityEvent onLoadProgress = null;
+
+		[SerializeField]
 		private UnityEvent onLoadComplete = null;
 
 		private Coroutine loadingCoroutine = null;
@@ -49,6 +55,8 @@ namespace CCB.Roguelike
 							progressDebugText.Value = string.Format("{0:0.0}", loadProgress * 100.0f);
 							statusDebugText.Value = status;
 						}
+
+						onLoadProgress?.Invoke();
 					}));
 			}
 		}
@@ -63,6 +71,7 @@ namespace CCB.Roguelike
 
 		public IEnumerator Load(Action<float, string> progress)
 		{
+			onLoadStart?.Invoke();
 			float loadedLoadables = 0.0f;
 
 			foreach (ILoadable loadable in loadables)
