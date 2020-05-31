@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace CCB.Roguelike
 {
-	public class LoadableLoader : MonoBehaviour, ILoadable
+	public class LoadableLoader : MonoBehaviour
 	{
 		private readonly DebugText progressDebugText = new DebugText { Name = "Load Progress", Unit = "%" };
 		private readonly DebugText statusDebugText = new DebugText { Name = "Load Status" };
@@ -61,15 +61,7 @@ namespace CCB.Roguelike
 			}
 		}
 
-		public void CancelLoading()
-		{
-			if (loadingCoroutine != null)
-			{
-				StopCoroutine(loadingCoroutine);
-			}
-		}
-
-		public IEnumerator Load(Action<float, string> progress)
+		private IEnumerator Load(Action<float, string> progress)
 		{
 			onLoadStart?.Invoke();
 			float loadedLoadables = 0.0f;

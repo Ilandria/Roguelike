@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace CCB.Roguelike
 {
-	[CreateAssetMenu(fileName = "New Character Sprite Components", menuName = "CCB/Singletons/Character Sprite Components")]
+	[CreateAssetMenu(fileName = "New Character Sprite Components", menuName = "CCB/Singleton/Character Sprite Components")]
 	public class CharacterSpriteComponents : ScriptableObject, ILoadable
 	{
 		[SerializeField]
@@ -24,6 +24,8 @@ namespace CCB.Roguelike
 
 		private IEnumerable<CharacterSpriteComponent> components = null;
 		private CharacterSpriteComponent errorSprite = null;
+
+		public bool IsLoaded { get; private set; } = false;
 
 		public CharacterSpriteComponent GetSpriteSheet(Func<CharacterSpriteComponent, bool> query) =>
 			components.DefaultIfEmpty(errorSprite).SingleOrDefault(component => query(component));
@@ -42,42 +44,52 @@ namespace CCB.Roguelike
 
 		public IEnumerator Load(Action<float, string> progress)
 		{
-			float completedCount = 0.0f;
-			progress?.Invoke(0.0f, "Character sprites...");
-			yield return null;
-
-			string[] jsonFilePaths = Directory.GetFiles(streamingAssets, "CharacterSpriteCollection.json", SearchOption.AllDirectories);
-			int numCollections = jsonFilePaths.Length;
-			errorSprite = new CharacterSpriteComponent(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
-			HashSet<CharacterSpriteComponent> componentsSet = new HashSet<CharacterSpriteComponent>();
-
-			foreach (string jsonFilePath in jsonFilePaths)
+			if (!IsLoaded)
 			{
-				if (SpriteSheetCollection.TryDeserializeFile(out SpriteSheetCollection collection, jsonFilePath))
+				float completedCount = 0.0f;
+				progress?.Invoke(0.0f, "Character sprites...");
+				yield return null;
+
+				string[] jsonFilePaths = Directory.GetFiles(streamingAssets, "CharacterSpriteCollection.json", SearchOption.AllDirectories);
+				int numCollections = jsonFilePaths.Length;
+				errorSprite = new CharacterSpriteComponent(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
+				HashSet<CharacterSpriteComponent> componentsSet = new HashSet<CharacterSpriteComponent>();
+
+				foreach (string jsonFilePath in jsonFilePaths)
 				{
-					float sheetLoadCount = 0.0f;
-
-					foreach (SpriteSheetInfo sheet in collection.SpriteSheets)
+					if (SpriteSheetCollection.TryDeserializeFile(out SpriteSheetCollection collection, jsonFilePath))
 					{
-						// This looks a bit ugly but it's just some math to return detailed loading percentage.
-						float outerStep = completedCount / numCollections;
-						float innerStep = sheetLoadCount++ / collection.SpriteSheets.Length / numCollections;
-						progress?.Invoke(outerStep + innerStep, $"{collection.Body} - {collection.Part} - {sheet.Name}");
-						yield return null;
+						float sheetLoadCount = 0.0f;
 
-						if (sheet.TryLoadImage(new FileInfo(jsonFilePath).DirectoryName, sheetDescription.SpriteSheetSize))
+						foreach (SpriteSheetInfo sheet in collection.SpriteSheets)
 						{
-							componentsSet.Add(new CharacterSpriteComponent(collection.Body, collection.Part, sheet.Name, sheet.SpriteSheet));
+							// This looks a bit ugly but it's just some math to return detailed loading percentage.
+							float outerStep = completedCount / numCollections;
+							float innerStep = sheetLoadCount++ / collection.SpriteSheets.Length / numCollections;
+							progress?.Invoke(outerStep + innerStep, $"{collection.Body} - {collection.Part} - {sheet.Name}");
+							yield return null;
+
+							if (sheet.TryLoadImage(new FileInfo(jsonFilePath).DirectoryName, sheetDescription.SpriteSheetSize))
+							{
+								componentsSet.Add(new CharacterSpriteComponent(collection.Body, collection.Part, sheet.Name, sheet.SpriteSheet));
+							}
 						}
 					}
+
+					completedCount++;
+					yield return null;
 				}
 
-				completedCount++;
-				yield return null;
+				components = componentsSet;
+				IsLoaded = true;
 			}
 
-			components = componentsSet;
 			progress?.Invoke(1.0f, "Character sprites loaded!");
+		}
+
+		private void OnDisable()
+		{
+			IsLoaded = false;
 		}
 
 		[Serializable]

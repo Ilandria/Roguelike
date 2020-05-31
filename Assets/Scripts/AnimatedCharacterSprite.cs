@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CCB.Roguelike
 {
@@ -50,7 +49,6 @@ namespace CCB.Roguelike
 		private void Awake()
 		{
 			spriteRenderer = GetComponent<SpriteRenderer>();
-			OnRegenerateSprite();
 		}
 
 		private void FixedUpdate()
@@ -69,7 +67,7 @@ namespace CCB.Roguelike
 
 		public void OnRegenerateSprite()
 		{
-			spriteBuilder.Request(bodyType, bodyName, noseName, eyeName, hairName, earName, skinColour, eyeColour, hairColour,
+			spriteBuilder.Build(bodyType, bodyName, noseName, eyeName, hairName, earName, skinColour, eyeColour, hairColour,
 			animationSpriteSet =>
 			{
 				animations = animationSpriteSet;

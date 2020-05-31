@@ -7,10 +7,10 @@ namespace CCB.Roguelike
 	public class PlayerController : MonoBehaviour
 	{
 		[SerializeField]
-		private Camera playerCamera;
+		private Camera playerCamera = null;
 
 		[SerializeField]
-		private Rigidbody2D playerRigidbody;
+		private Rigidbody2D playerRigidbody = null;
 
 		[SerializeField]
 		private float moveForce = 0.0f;

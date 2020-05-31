@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace CCB.Roguelike
 {
-	public class CharacterSpriteBuilder : MonoBehaviour
+	[CreateAssetMenu(fileName = "New Character Sprite Builder", menuName = "CCB/Singleton/Character Sprite Builder")]
+	public class CharacterSpriteBuilder : ScriptableObject
 	{
 		[SerializeField]
 		private Material spriteMaterial = null;
@@ -13,32 +13,32 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private CharacterSpriteComponents spriteComponents = null;
 
-		[SerializeField]
-		private Queue<CharacterSpriteBuilderRequest> currentRequests = new Queue<CharacterSpriteBuilderRequest>();
-
-		private bool isBuilding = false;
-
-		public void Request(CharacterBodyType bodyType, string bodyName, string noseName, string eyeName, string hairName, string earName, Color skinColour, Color eyeColour, Color hairColour, Action<AnimationSpriteSet> onRequestComplete)
+		public void Build(CharacterBodyType bodyType, string bodyName, string noseName, string eyeName, string hairName, string earName, Color skinColour, Color eyeColour, Color hairColour, Action<AnimationSpriteSet> onRequestComplete)
 		{
-			currentRequests.Enqueue(new CharacterSpriteBuilderRequest
-			{
-				OnBuildComplete = onRequestComplete,
-				BodyType = bodyType,
-				BodyName = bodyName,
-				NoseName = noseName,
-				EyeName = eyeName,
-				HairName = hairName,
-				EarName = earName,
-				SkinColour = skinColour,
-				EyeColour = eyeColour,
-				HairColour = hairColour
-			});
+			int width = spriteComponents.SheetDescription.SpriteSheetSize.x;
+			int height = spriteComponents.SheetDescription.SpriteSheetSize.y;
+			RenderTexture previousRenderTexture = RenderTexture.active;
+			Texture2D spriteSheet = new Texture2D(width, height, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
+			RenderTexture blitTarget = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.sRGB);
+			RenderTexture.active = blitTarget;
 
-			if (!isBuilding)
-			{
-				isBuilding = true;
-				StartCoroutine(ProcessRequests());
-			}
+			// Blit each layer from the repository to the temporary texture.
+			spriteMaterial.color = skinColour;
+			Graphics.Blit(spriteComponents.GetSpriteSheet(bodyType, CharacterPartType.Body, bodyName).SpriteSheet, blitTarget, spriteMaterial);
+			Graphics.Blit(spriteComponents.GetSpriteSheet(bodyType, CharacterPartType.Nose, noseName).SpriteSheet, blitTarget, spriteMaterial);
+			spriteMaterial.color = eyeColour;
+			Graphics.Blit(spriteComponents.GetSpriteSheet(bodyType, CharacterPartType.Eyes, eyeName).SpriteSheet, blitTarget, spriteMaterial);
+			spriteMaterial.color = hairColour;
+			Graphics.Blit(spriteComponents.GetSpriteSheet(bodyType, CharacterPartType.Hair, hairName).SpriteSheet, blitTarget, spriteMaterial);
+			spriteMaterial.color = skinColour;
+			Graphics.Blit(spriteComponents.GetSpriteSheet(bodyType, CharacterPartType.Ears, earName).SpriteSheet, blitTarget, spriteMaterial);
+
+			// Finalize the output texture.
+			RenderTexture.active = previousRenderTexture;
+			Graphics.CopyTexture(blitTarget, spriteSheet);
+			RenderTexture.ReleaseTemporary(blitTarget);
+
+			onRequestComplete(CreateAnimationSpriteSet(spriteComponents.SheetDescription, spriteSheet));
 		}
 
 		private AnimationSpriteSet CreateAnimationSpriteSet(SpriteSheetDescription description, Texture2D spriteSheet)
@@ -63,48 +63,6 @@ namespace CCB.Roguelike
 			}
 
 			return new AnimationSpriteSet(animations, spriteSheet);
-		}
-
-		private IEnumerator ProcessRequests()
-		{
-			while (currentRequests.Count > 0)
-			{
-				CharacterSpriteBuilderRequest request = currentRequests.Dequeue();
-				int width = spriteComponents.SheetDescription.SpriteSheetSize.x;
-				int height = spriteComponents.SheetDescription.SpriteSheetSize.y;
-				RenderTexture previousRenderTexture = RenderTexture.active;
-				Texture2D spriteSheet = new Texture2D(width, height, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
-				RenderTexture blitTarget = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.sRGB);
-				RenderTexture.active = blitTarget;
-
-				// Blit each layer from the repository to the temporary texture.
-				spriteMaterial.color = request.SkinColour;
-				Graphics.Blit(spriteComponents.GetSpriteSheet(request.BodyType, CharacterPartType.Body, request.BodyName).SpriteSheet, blitTarget, spriteMaterial);
-				Graphics.Blit(spriteComponents.GetSpriteSheet(request.BodyType, CharacterPartType.Nose, request.NoseName).SpriteSheet, blitTarget, spriteMaterial);
-				spriteMaterial.color = request.EyeColour;
-				Graphics.Blit(spriteComponents.GetSpriteSheet(request.BodyType, CharacterPartType.Eyes, request.EyeName).SpriteSheet, blitTarget, spriteMaterial);
-				spriteMaterial.color = request.HairColour;
-				Graphics.Blit(spriteComponents.GetSpriteSheet(request.BodyType, CharacterPartType.Hair, request.HairName).SpriteSheet, blitTarget, spriteMaterial);
-				spriteMaterial.color = request.SkinColour;
-				Graphics.Blit(spriteComponents.GetSpriteSheet(request.BodyType, CharacterPartType.Ears, request.EarName).SpriteSheet, blitTarget, spriteMaterial);
-				yield return null;
-
-				// Finalize the output texture.
-				RenderTexture.active = previousRenderTexture;
-				Graphics.CopyTexture(blitTarget, spriteSheet);
-				RenderTexture.ReleaseTemporary(blitTarget);
-				blitTarget = null;
-				previousRenderTexture = null;
-
-				request?.OnBuildComplete(CreateAnimationSpriteSet(spriteComponents.SheetDescription, spriteSheet));
-			}
-
-			isBuilding = false;
-		}
-
-		private void OnDisable()
-		{
-			StopAllCoroutines();
 		}
 	}
 }
