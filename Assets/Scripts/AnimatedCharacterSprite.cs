@@ -36,15 +36,13 @@ namespace CCB.Roguelike
 		private Color hairColour = Color.white;
 
 		[SerializeField]
-		private AnimationType currentAnimation = AnimationType.WalkDown;
-
-		[SerializeField]
 		private int ticksPerFrame = 5;
 
 		private SpriteRenderer spriteRenderer = null;
 		private AnimationSpriteSet animations = null;
 		private int currentFrame = 0;
 		private int tickCounter = 0;
+		private new Sprite[] animation = null;
 
 		private void Awake()
 		{
@@ -59,8 +57,8 @@ namespace CCB.Roguelike
 
 				if (tickCounter == 0)
 				{
-					currentFrame = ++currentFrame % animations[currentAnimation].Length;
-					spriteRenderer.sprite = animations[currentAnimation][currentFrame];
+					currentFrame = ++currentFrame % animation.Length;
+					spriteRenderer.sprite = animation[currentFrame];
 				}
 			}
 		}
@@ -74,6 +72,7 @@ namespace CCB.Roguelike
 				currentFrame = 0;
 				tickCounter = 0;
 			});
+			animation = animations[AnimationType.WalkDown];
 		}
 	}
 }
