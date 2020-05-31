@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CCB.Roguelike
 {
 	[Serializable]
-	public class CharacterSpriteComponent
+	public class CharacterSpriteLayer
 	{
 		[SerializeField]
 		private string name = string.Empty;
@@ -20,7 +20,7 @@ namespace CCB.Roguelike
 
 		public CharacterPartType Part { get; private set; }
 
-		public CharacterSpriteComponent(CharacterBodyType body, CharacterPartType part, string name, Texture2D spriteSheet)
+		public CharacterSpriteLayer(CharacterBodyType body, CharacterPartType part, string name, Texture2D spriteSheet)
 		{
 			Body = body;
 			Part = part;

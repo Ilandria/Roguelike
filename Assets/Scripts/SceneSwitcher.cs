@@ -36,7 +36,6 @@ namespace CCB.Roguelike
 			{
 				loadComplete = false;
 				loadSceneOperation = null;
-				
 				SceneManager.SetActiveScene(SceneManager.GetSceneByName(targetSceneName));
 			}
 		}

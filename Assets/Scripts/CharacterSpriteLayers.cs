@@ -10,7 +10,7 @@ using UnityEngine;
 namespace CCB.Roguelike
 {
 	[CreateAssetMenu(fileName = "New Character Sprite Components", menuName = "CCB/Singleton/Character Sprite Components")]
-	public class CharacterSpriteComponents : ScriptableObject, ILoadable
+	public class CharacterSpriteLayers : ScriptableObject, ILoadable
 	{
 		[SerializeField]
 		private string streamingAssets = Application.streamingAssetsPath;
@@ -22,25 +22,16 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private Texture2D errorTexture = null;
 
-		private IEnumerable<CharacterSpriteComponent> components = null;
-		private CharacterSpriteComponent errorSprite = null;
+		private IEnumerable<CharacterSpriteLayer> components = null;
+		private CharacterSpriteLayer errorSprite = null;
 
 		public bool IsLoaded { get; private set; } = false;
 
-		public CharacterSpriteComponent GetSpriteSheet(Func<CharacterSpriteComponent, bool> query) =>
-			components.DefaultIfEmpty(errorSprite).SingleOrDefault(component => query(component));
+		public CharacterSpriteLayer GetLayer(CharacterBodyType body, CharacterPartType part, string name) =>
+			components.Where(component => component.Body == body && component.Part == part && component.Name == name).DefaultIfEmpty(errorSprite).SingleOrDefault();
 
-		public CharacterSpriteComponent GetSpriteSheet(CharacterBodyType body, CharacterPartType part, string name) =>
-			components.DefaultIfEmpty(errorSprite).SingleOrDefault(component => component.Body == body && component.Part == part && component.Name == name);
-
-		public IEnumerable<CharacterSpriteComponent> GetSpriteSheets(Func<CharacterSpriteComponent, bool> query) =>
-			components.DefaultIfEmpty(errorSprite).Where(component => query(component));
-
-		public IEnumerable<CharacterSpriteComponent> GetSpriteSheets(CharacterBodyType body, CharacterPartType part) =>
-			components.DefaultIfEmpty(errorSprite).Where(component => component.Body == body && component.Part == part);
-
-		public IEnumerable<CharacterSpriteComponent> GetSpriteSheets(CharacterBodyType body) =>
-			components.DefaultIfEmpty(errorSprite).Where(component => component.Body == body);
+		public IEnumerable<CharacterSpriteLayer> GetSpriteSheets(CharacterBodyType body, CharacterPartType part) =>
+			components.Where(component => component.Body == body && component.Part == part).DefaultIfEmpty(errorSprite);
 
 		public IEnumerator Load(Action<float, string> progress)
 		{
@@ -52,8 +43,8 @@ namespace CCB.Roguelike
 
 				string[] jsonFilePaths = Directory.GetFiles(streamingAssets, "CharacterSpriteCollection.json", SearchOption.AllDirectories);
 				int numCollections = jsonFilePaths.Length;
-				errorSprite = new CharacterSpriteComponent(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
-				HashSet<CharacterSpriteComponent> componentsSet = new HashSet<CharacterSpriteComponent>();
+				errorSprite = new CharacterSpriteLayer(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
+				HashSet<CharacterSpriteLayer> componentsSet = new HashSet<CharacterSpriteLayer>();
 
 				foreach (string jsonFilePath in jsonFilePaths)
 				{
@@ -71,7 +62,7 @@ namespace CCB.Roguelike
 
 							if (sheet.TryLoadImage(new FileInfo(jsonFilePath).DirectoryName, sheetDescription.SpriteSheetSize))
 							{
-								componentsSet.Add(new CharacterSpriteComponent(collection.Body, collection.Part, sheet.Name, sheet.SpriteSheet));
+								componentsSet.Add(new CharacterSpriteLayer(collection.Body, collection.Part, sheet.Name, sheet.SpriteSheet));
 							}
 						}
 					}
