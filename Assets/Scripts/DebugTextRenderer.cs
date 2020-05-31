@@ -15,14 +15,9 @@ namespace CCB.Roguelike
 		private float spacing = 0.0f;
 
 		[SerializeField]
-		private List<DebugText> debugTexts = null;
+		private List<DebugText> debugTexts = new List<DebugText>();
 
 		private Rect drawLocation = Rect.zero;
-
-		private void Awake()
-		{
-			debugTexts = new List<DebugText>();
-		}
 
 		public void Add(DebugText debugText)
 		{

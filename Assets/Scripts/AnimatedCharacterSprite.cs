@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 
 namespace CCB.Roguelike
@@ -8,10 +7,10 @@ namespace CCB.Roguelike
 	public class AnimatedCharacterSprite : MonoBehaviour
 	{
 		[SerializeField]
-		private SpriteBuilder spriteBuilder = null;
+		private CharacterSpriteBuilder spriteBuilder = null;
 
 		[SerializeField]
-		private CharacterSpriteComponents sprites = null;
+		private CharacterBodyType bodyType = CharacterBodyType.Error;
 
 		[SerializeField]
 		private string bodyName = string.Empty;
@@ -43,7 +42,6 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private int ticksPerFrame = 5;
 
-		private Texture2D spriteSheet;
 		private SpriteRenderer spriteRenderer = null;
 		private AnimationSpriteSet animations = null;
 		private int currentFrame = 0;
@@ -52,7 +50,6 @@ namespace CCB.Roguelike
 		private void Awake()
 		{
 			spriteRenderer = GetComponent<SpriteRenderer>();
-			spriteSheet = new Texture2D(sprites.SheetDescription.SpriteSheetSize.x, sprites.SheetDescription.SpriteSheetSize.y, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
 		}
 
 		private void FixedUpdate()
@@ -69,9 +66,15 @@ namespace CCB.Roguelike
 			}
 		}
 
-		public void RegenerateSprite()
+		public void OnRegenerateSprite()
 		{
-			StartCoroutine(BuildNewSprite());
+			spriteBuilder.Request(bodyType, bodyName, noseName, eyeName, hairName, earName, skinColour, eyeColour, hairColour,
+			animationSpriteSet =>
+			{
+				animations = animationSpriteSet;
+				currentFrame = 0;
+				tickCounter = 0;
+			});
 		}
 
 		public void OnNextAnimation()
@@ -86,24 +89,6 @@ namespace CCB.Roguelike
 			currentFrame = 0;
 			tickCounter = 0;
 			currentAnimation = --currentAnimation >= 0 ? currentAnimation : (AnimationType)(Enum.GetNames(typeof(AnimationType)).Length - 1);
-		}
-
-		private IEnumerator BuildNewSprite()
-		{
-			int id = GetInstanceID();
-			yield return new WaitUntil(() => spriteBuilder.StartBuild(id, spriteSheet.width, spriteSheet.height));
-			// Todo: Find a better way to handle sex - ideally be able to send in a "male" or "female" flag instead of per-type. Maybe split parts and sex into 2 enums.
-			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleBody, bodyName).SpriteSheet, skinColour);
-			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleNose, noseName).SpriteSheet, skinColour);
-			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleEyes, eyeName).SpriteSheet, eyeColour);
-			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleHair, hairName).SpriteSheet, hairColour);
-			spriteBuilder.AddLayer(id, sprites.GetSpriteComponent(CharacterSpriteComponentType.FemaleEars, earName).SpriteSheet, skinColour);
-			spriteBuilder.PauseBuild(id);
-			yield return new WaitForEndOfFrame();
-			spriteBuilder.FinishBuild(id, spriteSheet);
-			animations = spriteBuilder.CreateAnimationSpriteSet(sprites.SheetDescription, spriteSheet);
-			currentFrame = 0;
-			tickCounter = 0;
 		}
 	}
 }

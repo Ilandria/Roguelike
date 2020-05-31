@@ -1,5 +1,6 @@
 {
-	"Type":"FemaleNose",
+	"Body":"Female",
+	"Part":"Nose",
 	"SpriteSheets":
 	[
 		{

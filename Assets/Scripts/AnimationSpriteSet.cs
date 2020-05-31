@@ -6,11 +6,13 @@ namespace CCB.Roguelike
 	public class AnimationSpriteSet
 	{
 		private static readonly Sprite[] emptySprite = new Sprite[] { };
-		private IDictionary<AnimationType, Sprite[]> animations;
+		private readonly IDictionary<AnimationType, Sprite[]> animations;
+		public Texture2D SpriteSheet { get; private set; }
 
-		public AnimationSpriteSet(IDictionary<AnimationType, Sprite[]> animations)
+		public AnimationSpriteSet(IDictionary<AnimationType, Sprite[]> animations, Texture2D spriteSheet)
 		{
 			this.animations = animations;
+			SpriteSheet = spriteSheet;
 		}
 
 		public Sprite[] this[AnimationType type]

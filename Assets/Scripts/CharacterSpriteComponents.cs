@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace CCB.Roguelike
@@ -21,75 +22,61 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private Texture2D errorTexture = null;
 
-		private Dictionary<CharacterSpriteComponentType, Dictionary<string, CharacterSpriteComponent>> componentsMap = null;
+		private IEnumerable<CharacterSpriteComponent> components = null;
+		private CharacterSpriteComponent errorSprite = null;
 
-		public IDictionary<string, CharacterSpriteComponent> GetSpriteComponentSheets(CharacterSpriteComponentType type)
-		{
-			if (componentsMap.ContainsKey(type))
-			{
-				return componentsMap[type];
-			}
+		public CharacterSpriteComponent GetSpriteSheet(Func<CharacterSpriteComponent, bool> query) =>
+			components.DefaultIfEmpty(errorSprite).SingleOrDefault(component => query(component));
 
-			return componentsMap[CharacterSpriteComponentType.Error];
-		}
+		public CharacterSpriteComponent GetSpriteSheet(CharacterBodyType body, CharacterPartType part, string name) =>
+			components.DefaultIfEmpty(errorSprite).SingleOrDefault(component => component.Body == body && component.Part == part && component.Name == name);
 
-		public CharacterSpriteComponent GetSpriteComponent(CharacterSpriteComponentType type, string name)
-		{
-			if (componentsMap.ContainsKey(type) && componentsMap[type].ContainsKey(name))
-			{
-				return componentsMap[type][name];
-			}
+		public IEnumerable<CharacterSpriteComponent> GetSpriteSheets(Func<CharacterSpriteComponent, bool> query) =>
+			components.DefaultIfEmpty(errorSprite).Where(component => query(component));
 
-			return componentsMap[CharacterSpriteComponentType.Error]["Error"];
-		}
+		public IEnumerable<CharacterSpriteComponent> GetSpriteSheets(CharacterBodyType body, CharacterPartType part) =>
+			components.DefaultIfEmpty(errorSprite).Where(component => component.Body == body && component.Part == part);
+
+		public IEnumerable<CharacterSpriteComponent> GetSpriteSheets(CharacterBodyType body) =>
+			components.DefaultIfEmpty(errorSprite).Where(component => component.Body == body);
 
 		public IEnumerator Load(Action<float, string> progress)
 		{
 			float completedCount = 0.0f;
-			componentsMap = new Dictionary<CharacterSpriteComponentType, Dictionary<string, CharacterSpriteComponent>>();
 			progress?.Invoke(0.0f, "Character sprites...");
 			yield return null;
 
-			// Initialize the error lookup value to make sure this always exists.
-			Dictionary<string, CharacterSpriteComponent> errorDict = new Dictionary<string, CharacterSpriteComponent>
-			{
-				{ "Error", new CharacterSpriteComponent(CharacterSpriteComponentType.Error, "Error", errorTexture) }
-			};
-
-			componentsMap.Add(CharacterSpriteComponentType.Error, errorDict);
-
-			// Try to get the json strings defining all of the various character sprite sheets.
 			string[] jsonFilePaths = Directory.GetFiles(streamingAssets, "CharacterSpriteCollection.json", SearchOption.AllDirectories);
 			int numCollections = jsonFilePaths.Length;
+			errorSprite = new CharacterSpriteComponent(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
+			HashSet<CharacterSpriteComponent> componentsSet = new HashSet<CharacterSpriteComponent>();
 
 			foreach (string jsonFilePath in jsonFilePaths)
 			{
 				if (SpriteSheetCollection.TryDeserializeFile(out SpriteSheetCollection collection, jsonFilePath))
 				{
-					Dictionary<string, CharacterSpriteComponent> components = new Dictionary<string, CharacterSpriteComponent>();
 					float sheetLoadCount = 0.0f;
 
 					foreach (SpriteSheetInfo sheet in collection.SpriteSheets)
 					{
 						// This looks a bit ugly but it's just some math to return detailed loading percentage.
 						float outerStep = completedCount / numCollections;
-						float innerStep = (sheetLoadCount++ / collection.SpriteSheets.Length) / numCollections;
-						progress?.Invoke(outerStep + innerStep, $"{collection.Type} - {sheet.Name}");
+						float innerStep = sheetLoadCount++ / collection.SpriteSheets.Length / numCollections;
+						progress?.Invoke(outerStep + innerStep, $"{collection.Body} - {collection.Part} - {sheet.Name}");
 						yield return null;
 
 						if (sheet.TryLoadImage(new FileInfo(jsonFilePath).DirectoryName, sheetDescription.SpriteSheetSize))
 						{
-							components.Add(sheet.Name, new CharacterSpriteComponent(collection.Type, sheet.Name, sheet.SpriteSheet));
+							componentsSet.Add(new CharacterSpriteComponent(collection.Body, collection.Part, sheet.Name, sheet.SpriteSheet));
 						}
 					}
-
-					componentsMap.Add(collection.Type, components);
 				}
 
 				completedCount++;
 				yield return null;
 			}
 
+			components = componentsSet;
 			progress?.Invoke(1.0f, "Character sprites loaded!");
 		}
 
@@ -97,8 +84,13 @@ namespace CCB.Roguelike
 		private class SpriteSheetCollection
 		{
 			[JsonConverter(typeof(StringEnumConverter))]
-			public CharacterSpriteComponentType Type { get; set; }
+			public CharacterBodyType Body { get; set; }
+
+			[JsonConverter(typeof(StringEnumConverter))]
+			public CharacterPartType Part { get; set; }
+
 			public SpriteSheetInfo[] SpriteSheets { get; set; }
+
 			public string FileDirectory { get; set; }
 
 			public static bool TryDeserializeFile(out SpriteSheetCollection result, string jsonFilePath)
@@ -122,7 +114,9 @@ namespace CCB.Roguelike
 		private class SpriteSheetInfo
 		{
 			public string Name { get; set; }
+
 			public string FileName { get; set; }
+
 			public Texture2D SpriteSheet { get; private set; }
 
 			public bool TryLoadImage(string imageDirectory, Vector2Int spriteSheetSize)

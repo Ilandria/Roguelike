@@ -1,6 +1,7 @@
 {
-	"type":"MaleEars",
-	"spriteSheets":
+	"Body":"Male",
+	"Part":"Ears",
+	"SpriteSheets":
 	[
 		{
 			"Name":"Elf",

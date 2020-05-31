@@ -1,5 +1,6 @@
 {
-	"Type":"FemaleEars",
+	"Body":"Female",
+	"Part":"Ears",
 	"SpriteSheets":
 	[
 		{

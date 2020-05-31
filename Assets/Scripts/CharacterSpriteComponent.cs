@@ -14,13 +14,16 @@ namespace CCB.Roguelike
 			private set => name = value;
 		}
 
-		public Texture2D SpriteSheet { get; private set; }
+		public Texture2D SpriteSheet { get; private set; } = null;
 
-		public CharacterSpriteComponentType Type { get; private set; }
+		public CharacterBodyType Body { get; private set; }
 
-		public CharacterSpriteComponent(CharacterSpriteComponentType type, string name, Texture2D spriteSheet)
+		public CharacterPartType Part { get; private set; }
+
+		public CharacterSpriteComponent(CharacterBodyType body, CharacterPartType part, string name, Texture2D spriteSheet)
 		{
-			Type = type;
+			Body = body;
+			Part = part;
 			Name = name;
 			SpriteSheet = spriteSheet;
 		}

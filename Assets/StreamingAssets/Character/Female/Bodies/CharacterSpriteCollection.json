@@ -1,5 +1,6 @@
 {
-	"Type":"FemaleBody",
+	"Body":"Female",
+	"Part":"Body",
 	"SpriteSheets":
 	[
 		{
