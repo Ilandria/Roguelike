@@ -6,10 +6,10 @@ namespace CCB.Roguelike
 	public class DebugTextRenderer : MonoBehaviour
 	{
 		[SerializeField]
-		private Vector2 screenEdgeOffset = Vector2.zero;
+		private Vector2 screenEdgeOffset = new Vector2(5.0f, 0.0f);
 
 		[SerializeField]
-		private Vector2 elementSize = Vector2.zero;
+		private Vector2 elementSize = new Vector2(400.0f, 20.0f);
 
 		[SerializeField]
 		private float spacing = 0.0f;

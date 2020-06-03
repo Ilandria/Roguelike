@@ -197,12 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54fac75d1d6a7b348ab0c8c871d66966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetSceneName: Main
-  autoActivateOnLoad: 1
-  loadComplete: 0
-  onLoadComplete:
-    m_PersistentCalls:
-      m_Calls: []
+  targetSceneName: Main Menu
 --- !u!4 &1649569772
 Transform:
   m_ObjectHideFlags: 0
@@ -377,5 +372,10 @@ PrefabInstance:
       propertyPath: onLoadComplete.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1649569771}
+    - target: {fileID: 2579024683136741127, guid: ac2ea7ea4a59be4448664d647104fcfb,
+        type: 3}
+      propertyPath: onLoadComplete.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SwitchScene
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac2ea7ea4a59be4448664d647104fcfb, type: 3}

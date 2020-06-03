@@ -11,9 +11,6 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private Rigidbody2D characterRigidbody = null;
 
-		//[SerializeField]
-		//private PlayerController playerController = null;
-
 		[SerializeField]
 		[Range(0.0f, 1.0f)]
 		private float animationUpdateRate = 0.0f;

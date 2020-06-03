@@ -35,16 +35,16 @@ namespace CCB.Roguelike
 
 		public IEnumerator Load(Action<float, string> progress)
 		{
-			if (!IsLoaded)
+			if (errorSprite == null)
 			{
 				float completedCount = 0.0f;
 				progress?.Invoke(0.0f, "Character sprites...");
-				yield return null;
 
 				string[] jsonFilePaths = Directory.GetFiles(streamingAssets, "CharacterSpriteCollection.json", SearchOption.AllDirectories);
 				int numCollections = jsonFilePaths.Length;
 				errorSprite = new CharacterSpriteLayer(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
 				HashSet<CharacterSpriteLayer> componentsSet = new HashSet<CharacterSpriteLayer>();
+				yield return null;
 
 				foreach (string jsonFilePath in jsonFilePaths)
 				{
@@ -72,15 +72,15 @@ namespace CCB.Roguelike
 				}
 
 				components = componentsSet;
-				IsLoaded = true;
 			}
 
 			progress?.Invoke(1.0f, "Character sprites loaded!");
 		}
 
-		private void OnDisable()
+		private void OnEnable()
 		{
-			IsLoaded = false;
+			errorSprite = null;
+			components = null;
 		}
 
 		[Serializable]
