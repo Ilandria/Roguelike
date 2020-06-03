@@ -330,7 +330,7 @@ MonoBehaviour:
   velocityFactor: 2
   lookFactor: 0.5
   smoothing: 0.975
-  maxOffset: {x: 3, y: 2}
+  maxOffset: {x: 2.5, y: 2}
 --- !u!1 &2047388620568561444
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ namespace CCB.Roguelike
 		private Animator animator = null;
 
 		[SerializeField]
-		private new Rigidbody2D rigidbody = null;
+		private Rigidbody2D characterRigidbody = null;
 
 		//[SerializeField]
 		//private PlayerController playerController = null;
@@ -38,7 +38,7 @@ namespace CCB.Roguelike
 
 			while (enabled)
 			{
-				velocity = rigidbody.velocity;
+				velocity = characterRigidbody.velocity;
 
 				// Speed.
 				speed = velocity.sqrMagnitude;

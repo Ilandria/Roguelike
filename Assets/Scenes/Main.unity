@@ -217,31 +217,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2047388620378495809, guid: 5f6e011533e44714d9014befb6090193,
-        type: 3}
-      propertyPath: velocityFactor
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2047388620378495809, guid: 5f6e011533e44714d9014befb6090193,
-        type: 3}
-      propertyPath: lookFactor
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2047388620378495809, guid: 5f6e011533e44714d9014befb6090193,
-        type: 3}
-      propertyPath: smoothing
-      value: 0.975
-      objectReference: {fileID: 0}
-    - target: {fileID: 2047388620378495809, guid: 5f6e011533e44714d9014befb6090193,
-        type: 3}
-      propertyPath: maxOffset.x
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2047388620378495809, guid: 5f6e011533e44714d9014befb6090193,
-        type: 3}
-      propertyPath: maxOffset.y
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 2047388620712665288, guid: 5f6e011533e44714d9014befb6090193,
         type: 3}
       propertyPath: m_LocalPosition.x
