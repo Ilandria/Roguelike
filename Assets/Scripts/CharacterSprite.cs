@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CCB.Roguelike
@@ -42,9 +43,24 @@ namespace CCB.Roguelike
 		public Texture2D SpriteSheet { get; private set; }
 		private Dictionary<string, Sprite> sprites = null;
 
-		public void OnRegenerateSprite()
+		private void Awake()
 		{
-			(Texture2D, Dictionary<string, Sprite>) result = spriteBuilder.Build(bodyType, bodyName, noseName, eyeName, hairName, earName, skinColour, eyeColour, hairColour);
+			StopAllCoroutines();
+
+			// Keep trying to create the character's sprite until success.
+			StartCoroutine(CreateSprite());
+		}
+
+		private IEnumerator CreateSprite()
+		{
+			(Texture2D, Dictionary<string, Sprite>) result = (null, null);
+
+			while (result == (null, null))
+			{
+				result = spriteBuilder.Build(bodyType, bodyName, noseName, eyeName, hairName, earName, skinColour, eyeColour, hairColour);
+				yield return null;
+			}
+
 			SpriteSheet = result.Item1;
 			sprites = result.Item2;
 		}

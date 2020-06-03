@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace CCB.Roguelike
 {
 	[RequireComponent(typeof(PlayerInput))]
-	public class PlayerController : MonoBehaviour
+	public class PlayerController : MonoBehaviourPun
 	{
 		private static readonly Vector2 half = Vector2.one * 0.5f;
 
@@ -47,6 +48,13 @@ namespace CCB.Roguelike
 
 		private void Awake()
 		{
+			if (!photonView.IsMine)
+			{
+				enabled = false;
+				Destroy(this);
+				return;
+			}
+
 			GetComponent<PlayerInput>().onControlsChanged += OnControlsChanged;
 		}
 

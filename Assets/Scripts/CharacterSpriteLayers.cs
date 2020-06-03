@@ -74,11 +74,13 @@ namespace CCB.Roguelike
 				components = componentsSet;
 			}
 
+			IsLoaded = true;
 			progress?.Invoke(1.0f, "Character sprites loaded!");
 		}
 
 		private void OnEnable()
 		{
+			IsLoaded = false;
 			errorSprite = null;
 			components = null;
 		}

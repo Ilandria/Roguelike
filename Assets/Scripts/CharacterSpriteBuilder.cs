@@ -10,12 +10,17 @@ namespace CCB.Roguelike
 		private Material spriteMaterial = null;
 
 		[SerializeField]
-		private CharacterSpriteLayers spriteComponents = null;
+		private CharacterSpriteLayers spriteLayers = null;
 
 		public (Texture2D, Dictionary<string, Sprite>) Build(CharacterBodyType bodyType, string bodyName, string noseName, string eyeName, string hairName, string earName, Color skinColour, Color eyeColour, Color hairColour)
 		{
-			int width = spriteComponents.SheetDescription.SpriteSheetSize.x;
-			int height = spriteComponents.SheetDescription.SpriteSheetSize.y;
+			if (spriteLayers == null || !spriteLayers.IsLoaded)
+			{
+				return (null, null);
+			}
+
+			int width = spriteLayers.SheetDescription.SpriteSheetSize.x;
+			int height = spriteLayers.SheetDescription.SpriteSheetSize.y;
 			RenderTexture previousRenderTexture = RenderTexture.active;
 			Texture2D spriteSheet = new Texture2D(width, height, TextureFormat.RGBA32, false, false) { filterMode = FilterMode.Point };
 			RenderTexture blitTarget = RenderTexture.GetTemporary(width, height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.sRGB);
@@ -23,21 +28,21 @@ namespace CCB.Roguelike
 
 			// Blit each layer from the repository to the temporary texture.
 			spriteMaterial.color = skinColour;
-			Graphics.Blit(spriteComponents.GetLayer(bodyType, CharacterPartType.Body, bodyName).SpriteSheet, blitTarget, spriteMaterial);
-			Graphics.Blit(spriteComponents.GetLayer(bodyType, CharacterPartType.Nose, noseName).SpriteSheet, blitTarget, spriteMaterial);
+			Graphics.Blit(spriteLayers.GetLayer(bodyType, CharacterPartType.Body, bodyName).SpriteSheet, blitTarget, spriteMaterial);
+			Graphics.Blit(spriteLayers.GetLayer(bodyType, CharacterPartType.Nose, noseName).SpriteSheet, blitTarget, spriteMaterial);
 			spriteMaterial.color = eyeColour;
-			Graphics.Blit(spriteComponents.GetLayer(bodyType, CharacterPartType.Eyes, eyeName).SpriteSheet, blitTarget, spriteMaterial);
+			Graphics.Blit(spriteLayers.GetLayer(bodyType, CharacterPartType.Eyes, eyeName).SpriteSheet, blitTarget, spriteMaterial);
 			spriteMaterial.color = hairColour;
-			Graphics.Blit(spriteComponents.GetLayer(bodyType, CharacterPartType.Hair, hairName).SpriteSheet, blitTarget, spriteMaterial);
+			Graphics.Blit(spriteLayers.GetLayer(bodyType, CharacterPartType.Hair, hairName).SpriteSheet, blitTarget, spriteMaterial);
 			spriteMaterial.color = skinColour;
-			Graphics.Blit(spriteComponents.GetLayer(bodyType, CharacterPartType.Ears, earName).SpriteSheet, blitTarget, spriteMaterial);
+			Graphics.Blit(spriteLayers.GetLayer(bodyType, CharacterPartType.Ears, earName).SpriteSheet, blitTarget, spriteMaterial);
 
 			// Finalize the output texture.
 			RenderTexture.active = previousRenderTexture;
 			Graphics.CopyTexture(blitTarget, spriteSheet);
 			RenderTexture.ReleaseTemporary(blitTarget);
 
-			return CreateAnimationSpriteSet(spriteComponents.SheetDescription, spriteSheet);
+			return CreateAnimationSpriteSet(spriteLayers.SheetDescription, spriteSheet);
 		}
 
 		private (Texture2D, Dictionary<string, Sprite>) CreateAnimationSpriteSet(SpriteSheetDescription description, Texture2D spriteSheet)

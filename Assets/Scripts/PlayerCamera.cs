@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 
 namespace CCB.Roguelike
 {
 	[RequireComponent(typeof(Camera))]
-	public class PlayerCamera : MonoBehaviour
+	public class PlayerCamera : MonoBehaviourPun
 	{
 		[SerializeField]
 		private PlayerController playerController = null;
@@ -55,6 +56,15 @@ namespace CCB.Roguelike
 		private void LateUpdate()
 		{
 			playerCamera.transform.position = targetPosition;
+		}
+
+		private void Awake()
+		{
+			if (!photonView.IsMine)
+			{
+				enabled = false;
+				Destroy(this);
+			}
 		}
 	}
 }
