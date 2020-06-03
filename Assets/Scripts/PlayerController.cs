@@ -6,6 +6,8 @@ namespace CCB.Roguelike
 	[RequireComponent(typeof(PlayerInput))]
 	public class PlayerController : MonoBehaviour
 	{
+		private static readonly Vector2 half = Vector2.one * 0.5f;
+
 		[SerializeField]
 		private Camera playerCamera = null;
 
@@ -19,7 +21,8 @@ namespace CCB.Roguelike
 		private Vector2 inputAxis = Vector2.zero;
 
 		[SerializeField]
-		private Vector2 lookPosition = Vector2.zero;
+		private Vector2 lookPosition = half;
+		/// <summary>In viewport coordinates.</summary>
 		public Vector2 LookPosition => lookPosition;
 
 		[SerializeField]
@@ -34,11 +37,11 @@ namespace CCB.Roguelike
 		{
 			if (isUsingMouse)
 			{
-				lookPosition = playerCamera.ScreenToWorldPoint(inputValue.Get<Vector2>());
+				lookPosition = playerCamera.ScreenToViewportPoint(inputValue.Get<Vector2>());
 			}
 			else
 			{
-				lookPosition = playerRigidbody.position + inputValue.Get<Vector2>();
+				lookPosition = inputValue.Get<Vector2>() * 0.5f + half;
 			}
 		}
 

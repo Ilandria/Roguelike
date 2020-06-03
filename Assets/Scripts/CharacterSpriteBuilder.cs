@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace CCB.Roguelike
@@ -14,7 +12,7 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private CharacterSpriteLayers spriteComponents = null;
 
-		public void Build(CharacterBodyType bodyType, string bodyName, string noseName, string eyeName, string hairName, string earName, Color skinColour, Color eyeColour, Color hairColour, Action<Dictionary<AnimationType, AnimationClip>> onRequestComplete)
+		public (Texture2D, Dictionary<string, Sprite>) Build(CharacterBodyType bodyType, string bodyName, string noseName, string eyeName, string hairName, string earName, Color skinColour, Color eyeColour, Color hairColour)
 		{
 			int width = spriteComponents.SheetDescription.SpriteSheetSize.x;
 			int height = spriteComponents.SheetDescription.SpriteSheetSize.y;
@@ -39,54 +37,29 @@ namespace CCB.Roguelike
 			Graphics.CopyTexture(blitTarget, spriteSheet);
 			RenderTexture.ReleaseTemporary(blitTarget);
 
-			onRequestComplete(CreateAnimationSpriteSet(spriteComponents.SheetDescription, spriteSheet));
+			return CreateAnimationSpriteSet(spriteComponents.SheetDescription, spriteSheet);
 		}
 
-		private Dictionary<AnimationType, AnimationClip> CreateAnimationSpriteSet(SpriteSheetDescription description, Texture2D spriteSheet)
+		private (Texture2D, Dictionary<string, Sprite>) CreateAnimationSpriteSet(SpriteSheetDescription description, Texture2D spriteSheet)
 		{
 			// Output for all generated animation-sprite sets.
-			Dictionary<AnimationType, AnimationClip> animations = new Dictionary<AnimationType, AnimationClip>();
+			Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
 			Rect frameBounds = Rect.zero;
 
 			for (int animId = 0; animId < description.Animations.Count; animId++)
 			{
 				AnimationInfo animInfo = description.Animations[animId];
-				Sprite[] frames = new Sprite[animInfo.frameCount];
 
 				for (int frameId = 0; frameId < animInfo.frameCount; frameId++)
 				{
 					frameBounds.Set(frameId * description.SpriteSize.x, animId * description.SpriteSize.y, description.SpriteSize.x, description.SpriteSize.y);
-					frames[frameId] = Sprite.Create(spriteSheet, frameBounds, description.SpritePivot);
+					Sprite sprite = Sprite.Create(spriteSheet, frameBounds, description.SpritePivot, 64, 0, SpriteMeshType.FullRect);
+					sprite.name = $"{animInfo.type}{frameId}";
+					sprites.Add(sprite.name, sprite);
 				}
-
-				// Add each animation type and all of its frames (sprites) to the output.
-				animations.Add(animInfo.type, ConvertToAnimationClip(frames));
 			}
 
-			return animations;
-		}
-
-		private AnimationClip ConvertToAnimationClip(Sprite[] sprites)
-		{
-			AnimationClip clip = new AnimationClip
-			{
-				frameRate = 12.0f,
-				legacy = true
-			};
-
-			for (int i = 0; i < sprites.Length; i++)
-			{
-				AnimationEvent clipEvent = new AnimationEvent
-				{
-					functionName = "SetSprite",
-					time = i / 12.0f,
-					objectReferenceParameter = sprites[i]
-				};
-
-				clip.AddEvent(clipEvent);
-			}
-
-			return clip;
+			return (spriteSheet, sprites);
 		}
 	}
 }

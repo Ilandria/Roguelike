@@ -45,7 +45,7 @@ namespace CCB.Roguelike
 
 		private void FixedUpdate()
 		{
-			lookOffset = playerController.LookPosition - trackTarget.position;
+			lookOffset = (Vector2)playerCamera.ViewportToWorldPoint(playerController.LookPosition) - trackTarget.position;
 			targetOffset = trackTarget.velocity * velocityFactor + lookOffset * lookFactor;
 			targetOffset.Set(Mathf.Clamp(targetOffset.x, -maxOffset.x, maxOffset.x), Mathf.Clamp(targetOffset.y, -maxOffset.y, maxOffset.y));
 			targetPosition.Set(trackTarget.position.x + targetOffset.x, trackTarget.position.y + targetOffset.y, cameraZ);
