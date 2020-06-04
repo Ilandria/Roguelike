@@ -48,14 +48,16 @@ namespace CCB.Roguelike
 
 		private void Awake()
 		{
+			GetComponent<PlayerInput>().onControlsChanged += OnControlsChanged;
+		}
+
+		private void Start()
+		{
 			if (!photonView.IsMine)
 			{
-				enabled = false;
-				Destroy(this);
-				return;
+				GetComponent<PlayerInput>().onControlsChanged -= OnControlsChanged;
+				Destroy(gameObject);
 			}
-
-			GetComponent<PlayerInput>().onControlsChanged += OnControlsChanged;
 		}
 
 		private void OnControlsChanged(PlayerInput playerInput)

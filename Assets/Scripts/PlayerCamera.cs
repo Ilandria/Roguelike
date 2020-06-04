@@ -58,12 +58,11 @@ namespace CCB.Roguelike
 			playerCamera.transform.position = targetPosition;
 		}
 
-		private void Awake()
+		private void Start()
 		{
 			if (!photonView.IsMine)
 			{
-				enabled = false;
-				Destroy(this);
+				Destroy(gameObject);
 			}
 		}
 	}

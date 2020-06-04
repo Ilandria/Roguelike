@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Character Sprite Builder
   m_EditorClassIdentifier: 
   spriteMaterial: {fileID: 2100000, guid: 1d00c6d207b9b9445b3f278a0543df74, type: 2}
-  spriteComponents: {fileID: 11400000, guid: 76c131e064772ca45a05725f142e3cae, type: 2}
+  spriteLayers: {fileID: 11400000, guid: 76c131e064772ca45a05725f142e3cae, type: 2}

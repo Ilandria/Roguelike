@@ -43,28 +43,42 @@ namespace CCB.Roguelike
 		public Texture2D SpriteSheet { get; private set; }
 		private Dictionary<string, Sprite> sprites = null;
 
+		private readonly WaitForSeconds waitForSeconds = new WaitForSeconds(1.0f);
+
 		private void Awake()
 		{
-			StopAllCoroutines();
-
-			// Keep trying to create the character's sprite until success.
-			StartCoroutine(CreateSprite());
+			if (!TryRebuildSprite())
+			{
+				// Keep trying to create the character's sprite until success.
+				StartCoroutine(CreateSprite());
+			}
 		}
 
 		private IEnumerator CreateSprite()
 		{
-			(Texture2D, Dictionary<string, Sprite>) result = (null, null);
-
-			while (result == (null, null))
+			while (!TryRebuildSprite())
 			{
-				result = spriteBuilder.Build(bodyType, bodyName, noseName, eyeName, hairName, earName, skinColour, eyeColour, hairColour);
-				yield return null;
+				// Wait for 1 second (arbitrary value just to not spam polls) between each attempt.
+				yield return waitForSeconds;
 			}
-
-			SpriteSheet = result.Item1;
-			sprites = result.Item2;
 		}
 
+		private bool TryRebuildSprite()
+		{
+			(Texture2D, Dictionary<string, Sprite>) result = spriteBuilder.Build(bodyType, bodyName, noseName, eyeName, hairName, earName, skinColour, eyeColour, hairColour); ;
+
+			if (result != (null, null))
+			{
+				SpriteSheet = result.Item1;
+				sprites = result.Item2;
+
+				return true;
+			}
+
+			return false;
+		}
+
+		// Update sprite to match whatever the animator says it should be.
 		private void LateUpdate()
 		{
 			if (sprites != null && sprites.TryGetValue(spriteRenderer.sprite.name, out Sprite sprite))

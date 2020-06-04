@@ -13,9 +13,6 @@ namespace CCB.Roguelike
 	public class CharacterSpriteLayers : ScriptableObject, ILoadable
 	{
 		[SerializeField]
-		private string streamingAssets = Application.streamingAssetsPath;
-
-		[SerializeField]
 		private SpriteSheetDescription sheetDescription = null;
 		public SpriteSheetDescription SheetDescription => sheetDescription;
 
@@ -40,7 +37,7 @@ namespace CCB.Roguelike
 				float completedCount = 0.0f;
 				progress?.Invoke(0.0f, "Character sprites...");
 
-				string[] jsonFilePaths = Directory.GetFiles(streamingAssets, "CharacterSpriteCollection.json", SearchOption.AllDirectories);
+				string[] jsonFilePaths = Directory.GetFiles(Application.streamingAssetsPath, "CharacterSpriteCollection.json", SearchOption.AllDirectories);
 				int numCollections = jsonFilePaths.Length;
 				errorSprite = new CharacterSpriteLayer(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
 				HashSet<CharacterSpriteLayer> componentsSet = new HashSet<CharacterSpriteLayer>();
