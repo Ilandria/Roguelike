@@ -335,10 +335,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 6019476956528775682}
   trackTarget: {fileID: 2287323573003172956}
-  velocityFactor: 1
-  lookFactor: 0.5
+  velocityFactor: 0.75
+  lookFactor: 0.05
   smoothing: 0.95
-  maxOffset: {x: 0.5, y: 0.5}
+  maxOffset: {x: 1, y: 1}
 --- !u!114 &6612798842098092006
 MonoBehaviour:
   m_ObjectHideFlags: 0
