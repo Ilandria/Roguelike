@@ -118,7 +118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7028267828472201280}
   - component: {fileID: 5351936951931741602}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -549,7 +549,7 @@ GameObject:
   - component: {fileID: 7303771471165837762}
   - component: {fileID: 2382871737736250115}
   - component: {fileID: 8459219979062871663}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
