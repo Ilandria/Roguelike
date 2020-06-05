@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1370779645014484684
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1600817645851303520}
+  m_Layer: 16
+  m_Name: Eye Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1600817645851303520
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370779645014484684}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.51, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4427011567536076616}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2637462465278339048
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,11 +111,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 2492857195270544849}
+  playerCharacter: {fileID: 648044380126800629}
   playerRigidbody: {fileID: 2287323573003172956}
-  moveForce: 1000
-  inputAxis: {x: 0, y: 0}
-  lookPosition: {x: 0, y: 0}
-  isUsingMouse: 1
+  moveForce: 250
+  backstepMultiplier: 0.75
+  strafeMultiplier: 0.5
 --- !u!114 &5926059021274364655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,7 +167,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4427011567536076616}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5351936951931741602
 SpriteRenderer:
@@ -238,7 +268,7 @@ GameObject:
   - component: {fileID: 242023493546204346}
   - component: {fileID: 7511830524398480935}
   - component: {fileID: 6612798842098092006}
-  m_Layer: 21
+  m_Layer: 28
   m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -317,7 +347,7 @@ MonoBehaviour:
   volumeTrigger: {fileID: 4766069100879746934}
   volumeLayer:
     serializedVersion: 2
-    m_Bits: 2097152
+    m_Bits: 268435456
   stopNaNPropagation: 0
   finalBlitToCameraTarget: 1
   antialiasingMode: 0
@@ -451,6 +481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4427011567536076616}
+  - component: {fileID: 648044380126800629}
   - component: {fileID: 2287323573003172956}
   - component: {fileID: 6612798842098092007}
   - component: {fileID: 6612798842098092024}
@@ -474,11 +505,26 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1600817645851303520}
   - {fileID: 7716199901178784271}
   - {fileID: 7028267828472201280}
   m_Father: {fileID: 1056938930033757343}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &648044380126800629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6612798842098092026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e92db39826e6b5d4aaa80565f55587d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnSpeed: 0.05
+  turnTargetUpdateRate: 0.1
 --- !u!50 &2287323573003172956
 Rigidbody2D:
   serializedVersion: 4
@@ -491,8 +537,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 60
-  m_LinearDrag: 20
+  m_Mass: 50
+  m_LinearDrag: 5
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -519,6 +565,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   ObservedComponents:
   - {fileID: 6612798842098092024}
+  - {fileID: 648044380126800629}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -612,7 +659,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4427011567536076616}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2366453077224892720
 SpriteRenderer:
@@ -676,7 +723,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: a921c8bb4f3b57347baa20db554d9a86, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 2
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -698,6 +745,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 7303771471165837762}
   characterRigidbody: {fileID: 2287323573003172956}
+  playerCharacter: {fileID: 648044380126800629}
   animationUpdateRate: 0.1
 --- !u!114 &8459219979062871663
 MonoBehaviour:

@@ -30,6 +30,7 @@ namespace CCB.Roguelike
 		private Vector2 targetOffset = Vector3.zero;
 		private Camera playerCamera = null;
 		private float cameraZ = 0.0f;
+		private float lerpFactor = 1.0f;
 
 		private void OnEnable()
 		{
@@ -42,15 +43,16 @@ namespace CCB.Roguelike
 				cameraZ
 			);
 			targetPosition = playerCamera.transform.position;
+			lerpFactor = 1.0f - smoothing;
 		}
 
 		private void FixedUpdate()
 		{
-			lookOffset = (Vector2)playerCamera.ViewportToWorldPoint(playerController.LookPosition) - trackTarget.position;
+			lookOffset = (Vector2)playerCamera.ViewportToWorldPoint(playerController.ViewportLookPosition) - trackTarget.position;
 			targetOffset = trackTarget.velocity * velocityFactor + lookOffset * lookFactor;
 			targetOffset.Set(Mathf.Clamp(targetOffset.x, -maxOffset.x, maxOffset.x), Mathf.Clamp(targetOffset.y, -maxOffset.y, maxOffset.y));
 			targetPosition.Set(trackTarget.position.x + targetOffset.x, trackTarget.position.y + targetOffset.y, cameraZ);
-			targetPosition = Vector3.Lerp(playerCamera.transform.position, targetPosition, 1.0f - smoothing);
+			targetPosition = Vector3.Lerp(playerCamera.transform.position, targetPosition, lerpFactor);
 		}
 
 		private void LateUpdate()

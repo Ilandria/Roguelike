@@ -12,66 +12,76 @@ namespace CCB.Roguelike
 		private Rigidbody2D characterRigidbody = null;
 
 		[SerializeField]
+		private PlayerCharacter playerCharacter = null;
+
+		// Todo: This should be handled by some under-the-hood config file.
+		[SerializeField]
 		[Range(0.0f, 1.0f)]
 		private float animationUpdateRate = 0.0f;
 
-		private WaitForSeconds waitForSeconds = null;
-		private MoveDir moveDir = MoveDir.Down;
-		private float speed = 0.0f;
-		private Vector2 velocity = Vector2.zero;
-		private int moveParamId = -1;
+		private WaitForSeconds animUpdateWait = null;
+		private int lookParamId = -1;
 		private int speedParamId = -1;
+		private int isMovingParamId = -1;
+		private float lookX = 0.0f;
+		private float lookY = -1.0f;
+		private float velocityX = 0.0f;
+		private float velocityY = 0.0f;
+		private float speed = 0.0f;
 
 		private void OnEnable()
 		{
-			moveParamId = Animator.StringToHash("MoveDir");
+			lookParamId = Animator.StringToHash("MoveDir");
 			speedParamId = Animator.StringToHash("Speed");
+			isMovingParamId = Animator.StringToHash("IsMoving");
+
 			StartCoroutine(Animate());
 		}
 
 		private IEnumerator Animate()
 		{
-			waitForSeconds = new WaitForSeconds(animationUpdateRate);
+			animUpdateWait = new WaitForSeconds(animationUpdateRate);
 
 			while (enabled)
 			{
-				velocity = characterRigidbody.velocity;
+				lookX = playerCharacter.LookDirection.x;
+				lookY = playerCharacter.LookDirection.y;
+				velocityX = Mathf.Clamp(characterRigidbody.velocity.x, -1, 1);
+				velocityY = Mathf.Clamp(characterRigidbody.velocity.y, -1, 1);
+				speed = characterRigidbody.velocity.sqrMagnitude;
 
-				// Speed.
-				speed = velocity.sqrMagnitude;
-
-				if (speed > 0.0001f)
+				if (Mathf.Abs(lookX) > Mathf.Abs(lookY))
 				{
-					// Movement direction.
-					if (Mathf.Abs(velocity.x) > Mathf.Abs(velocity.y))
+					if (lookX > 0)
 					{
-						if (velocity.x > 0)
-						{
-							moveDir = MoveDir.Right;
-						}
-						else
-						{
-							moveDir = MoveDir.Left;
-						}
+						animator.SetInteger(lookParamId, (int)LookDir.Right);
+						animator.SetBool(isMovingParamId, speed > 0.01f);
+						animator.SetFloat(speedParamId, velocityX >= 0 ? speed : -speed);
 					}
 					else
 					{
-						if (velocity.y > 0)
-						{
-							moveDir = MoveDir.Up;
-						}
-						else
-						{
-							moveDir = MoveDir.Down;
-						}
+						animator.SetInteger(lookParamId, (int)LookDir.Left);
+						animator.SetBool(isMovingParamId, speed > 0.01f);
+						animator.SetFloat(speedParamId, velocityX <= 0 ? speed : -speed);
+					}
+				}
+				else
+				{
+					if (lookY > 0)
+					{
+						animator.SetInteger(lookParamId, (int)LookDir.Up);
+						animator.SetBool(isMovingParamId, speed > 0.01f);
+						animator.SetFloat(speedParamId, velocityY >= 0 ? speed : -speed);
+					}
+					else
+					{
+						animator.SetInteger(lookParamId, (int)LookDir.Down);
+						animator.SetBool(isMovingParamId, speed > 0.01f);
+						animator.SetFloat(speedParamId, velocityY <= 0 ? speed : -speed);
 					}
 				}
 
-				// Animator parameters.
-				animator.SetInteger(moveParamId, (int)moveDir);
-				animator.SetFloat(speedParamId, speed);
-
-				yield return waitForSeconds;
+				yield return animUpdateWait;
 			}
 		}
 
@@ -79,7 +89,8 @@ namespace CCB.Roguelike
 		{
 			StopAllCoroutines();
 		}
-		private enum MoveDir
+
+		private enum LookDir
 		{
 			Up, Down, Right, Left
 		}
