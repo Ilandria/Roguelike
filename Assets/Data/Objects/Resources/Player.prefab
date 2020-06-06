@@ -259,7 +259,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 1003
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: afffc75bde4c69b4e8a741ae01794004, type: 2}
@@ -282,7 +282,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -100
 --- !u!114 &8600021300698693064
 MonoBehaviour:
   m_ObjectHideFlags: 0
