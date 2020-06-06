@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RendererFeatures: []
   m_RendererFeatureMap: 
-  m_TransparencySortMode: 0
+  m_TransparencySortMode: 3
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}
   m_HDREmulationScale: 1
   m_LightBlendStyles:
@@ -24,8 +24,8 @@ MonoBehaviour:
     renderTextureScale: 1
     blendMode: 1
     customBlendFactors:
-      multiplicative: 0
-      additive: 0
+      multiplicative: 0.95
+      additive: 0.05
   - enabled: 0
     name: Blend Style 1
     maskTextureChannel: 0

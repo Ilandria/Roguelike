@@ -24,7 +24,7 @@ namespace CCB.Roguelike
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
-		private double fov = 210.0 * (Math.PI / 180.0);
+		private double fov = 220.0 * (Math.PI / 180.0);
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
