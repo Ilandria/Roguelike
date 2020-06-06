@@ -55,13 +55,13 @@ namespace CCB.Roguelike
 					if (lookX > 0)
 					{
 						animator.SetInteger(lookParamId, (int)LookDir.Right);
-						animator.SetBool(isMovingParamId, speed > 0.01f);
+						animator.SetBool(isMovingParamId, speed > 0.001f);
 						animator.SetFloat(speedParamId, velocityX >= 0 ? speed : -speed);
 					}
 					else
 					{
 						animator.SetInteger(lookParamId, (int)LookDir.Left);
-						animator.SetBool(isMovingParamId, speed > 0.01f);
+						animator.SetBool(isMovingParamId, speed > 0.001f);
 						animator.SetFloat(speedParamId, velocityX <= 0 ? speed : -speed);
 					}
 				}
@@ -70,13 +70,13 @@ namespace CCB.Roguelike
 					if (lookY > 0)
 					{
 						animator.SetInteger(lookParamId, (int)LookDir.Up);
-						animator.SetBool(isMovingParamId, speed > 0.01f);
+						animator.SetBool(isMovingParamId, speed > 0.001f);
 						animator.SetFloat(speedParamId, velocityY >= 0 ? speed : -speed);
 					}
 					else
 					{
 						animator.SetInteger(lookParamId, (int)LookDir.Down);
-						animator.SetBool(isMovingParamId, speed > 0.01f);
+						animator.SetBool(isMovingParamId, speed > 0.001f);
 						animator.SetFloat(speedParamId, velocityY <= 0 ? speed : -speed);
 					}
 				}
