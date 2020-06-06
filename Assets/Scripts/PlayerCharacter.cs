@@ -68,13 +68,5 @@ namespace CCB.Roguelike
 				LookDirection.Set((float)stream.ReceiveNext(), (float)stream.ReceiveNext());
 			}
 		}
-
-		public void OnDrawGizmos()
-		{
-			Gizmos.color = Color.white;
-			Gizmos.DrawLine(transform.position, transform.position + (Vector3)LookDirection);
-			Gizmos.color = Color.red;
-			Gizmos.DrawLine(transform.position, transform.position + (Vector3)targetLookDirection);
-		}
 	}
 }
