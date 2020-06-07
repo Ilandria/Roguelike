@@ -101,12 +101,15 @@ namespace CCB.Roguelike
 					localRayVector = transform.InverseTransformDirection(rayVector);
 					float distance = totalAngle <= fovRadians ? viewDistance : minimumRadius;
 
-					if (Physics2D.RaycastNonAlloc(origin, rayVector, rayHitArray, distance, solidObjectLayer) == 0)
+					// Todo: Move the vision start buffer thing (* 0.5f) somewhere else not hard-coded.
+					// Todo: Shorten the ray length equal to the increase caused by the start buffer distance.
+					if (Physics2D.RaycastNonAlloc(origin + localRayVector * 0.45f, rayVector, rayHitArray, distance, solidObjectLayer) == 0)
 					{
 						vertices[i] = transform.InverseTransformPoint(origin) + localRayVector * distance;
 					}
 					else
 					{
+						// Todo: Instead of the padding here, have vision go until it is no longer hitting a collider.
 						vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point) + localRayVector * wallVisionDepth;
 					}
 

@@ -12,43 +12,35 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private GameObject localPlayer = null;
 
-		private bool isPhotonObject = false;
+		private bool hasPhotonObject = false;
 
 		// This is for handling offline mode when launching straight into the scene in-editor.
 		// Todo: Move this into an in-game network manager.
-		public override void OnJoinedRoom() => RebuildPlayerObject();
+		public override void OnJoinedRoom() => BuildPhotonObject();
 		public override void OnConnectedToMaster() => PhotonNetwork.CreateRoom("localhost");
 
-		public override void OnPlayerEnteredRoom(Player newPlayer) => RebuildPlayerObject();
-
-		private void RebuildPlayerObject()
+		private void BuildPhotonObject()
 		{
-			Vector3 position = localPlayer.GetComponentInChildren<Rigidbody2D>().position;
-
-			if (isPhotonObject)
+			if (!hasPhotonObject)
 			{
-				PhotonNetwork.Destroy(localPlayer);
-			}
-			else
-			{
+				Vector3 position = localPlayer.GetComponentInChildren<Rigidbody2D>().position;
 				Destroy(localPlayer);
+				localPlayer = PhotonNetwork.Instantiate(playerPrefab.name, position, Quaternion.identity);
+				hasPhotonObject = true;
 			}
-
-			localPlayer = PhotonNetwork.Instantiate(playerPrefab.name, position, Quaternion.identity);
-			isPhotonObject = true;
 		}
 
 		private void Start()
 		{
+			// This makes sure a player connecting to an existing game properly propogates their player object.
+			if (PhotonNetwork.IsConnected)
+			{
+				BuildPhotonObject();
+			}
 			// This is just to let us start from the game scene and have things function locally.
-			if (!PhotonNetwork.IsConnected)
+			else if (!PhotonNetwork.IsConnected)
 			{
 				PhotonNetwork.OfflineMode = true;
-			}
-			// This makes sure a player connecting to an existing game properly propogates their player object.
-			else if (!PhotonNetwork.IsMasterClient)
-			{
-				RebuildPlayerObject();
 			}
 		}
 	}
