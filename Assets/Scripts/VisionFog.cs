@@ -13,7 +13,7 @@ namespace CCB.Roguelike
 		private GameObject visionSource = null;
 
 		[SerializeField]
-		private int rayCount = 630;
+		private int rayCount = 720;
 
 		[SerializeField]
 		private float visionUpdateRate = 0.1f;
@@ -24,11 +24,15 @@ namespace CCB.Roguelike
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
-		private double fov = 220.0 * (Math.PI / 180.0);
+		private float fov = 220.0f;
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
 		private float viewDistance = 10.0f;
+
+		// Todo: Move this into PlayerCharacter.
+		[SerializeField]
+		private float minimumRadius = 1.0f;
 
 		private Mesh visionMesh = null;
 		private Vector3[] vertices = null;
@@ -42,31 +46,34 @@ namespace CCB.Roguelike
 		private Vector2 rayVector = Vector2.zero;
 		private Vector3 localRayVector = Vector3.zero;
 		private WaitForSeconds visionUpdateWait = null;
+		private float fovRadians = 0.0f;
+		private float halfFovRadians = 0.0f;
 		
 		public void OnEnable()
 		{
 			visionMesh = new Mesh();
 			GetComponent<MeshFilter>().mesh = visionMesh;
 
+			fovRadians = fov * (Mathf.PI / 180.0f);
+			halfFovRadians = fovRadians / 2.0f;
 			solidObjectLayer = LayerMask.GetMask("Solid Objects"); // Todo: Don't hardcode this.
-			angleIncrease = (float)(fov / rayCount);
-			vertices = new Vector3[rayCount + 2];
-			uv = new Vector2[vertices.Length];
-			indices = new int[rayCount * 3 + 3];
+			angleIncrease = Mathf.PI * 2.0f / rayCount;
+			int numVertices = rayCount + 1; // +1 to account for the center vertex.
+			vertices = new Vector3[numVertices];
+			uv = new Vector2[numVertices];
+			indices = new int[rayCount * 3];
 
-			int triangle = 0;
-
-			for (int vertex = 1; vertex <= rayCount; vertex++)
+			for (int ray = 0; ray < rayCount; ray++)
 			{
-				indices[triangle + 0] = 0;
-				indices[triangle + 1] = vertex - 1;
-				indices[triangle + 2] = vertex;
-				triangle += 3;
+				int tri = ray * 3;
+				indices[tri + 0] = 0;
+				indices[tri + 1] = ray + 1;
+				indices[tri + 2] = ray + 2 < numVertices ? ray + 2 : 1;
 			}
 
-			visionMesh.vertices = vertices;
-			visionMesh.uv = uv;
-			visionMesh.triangles = indices;
+			visionMesh.SetVertices(vertices);
+			visionMesh.SetUVs(0, uv);
+			visionMesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
 			visionUpdateWait = new WaitForSeconds(visionUpdateRate);
 			StartCoroutine(UpdateVision());
@@ -84,29 +91,30 @@ namespace CCB.Roguelike
 				}
 
 				origin = visionSource.transform.position;
-				angle = (float)(fov / 2.0) + lookAngle * ((float)Math.PI / 180.0f);
+				angle = halfFovRadians + lookAngle * (Mathf.PI / 180.0f);
 				vertices[0] = transform.InverseTransformPoint(origin);
-				int vertex = 1;
+				float totalAngle = 0.0f;
 
-				for (int i = 0; i <= rayCount; i++)
+				for (int i = 1; i <= rayCount; i++)
 				{
 					rayVector.Set(Mathf.Cos(angle), Mathf.Sin(angle));
 					localRayVector = transform.InverseTransformDirection(rayVector);
+					float distance = totalAngle <= fovRadians ? viewDistance : minimumRadius;
 
-					if (Physics2D.RaycastNonAlloc(origin, rayVector, rayHitArray, viewDistance, solidObjectLayer) == 0)
+					if (Physics2D.RaycastNonAlloc(origin, rayVector, rayHitArray, distance, solidObjectLayer) == 0)
 					{
-						vertices[vertex] = transform.InverseTransformPoint(origin) + localRayVector * viewDistance;
+						vertices[i] = transform.InverseTransformPoint(origin) + localRayVector * distance;
 					}
 					else
 					{
-						vertices[vertex] = transform.InverseTransformPoint(rayHitArray[0].point) + localRayVector * wallVisionDepth;
+						vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point) + localRayVector * wallVisionDepth;
 					}
 
-					vertex++;
+					totalAngle += angleIncrease;
 					angle -= angleIncrease;
 				}
 
-				visionMesh.vertices = vertices;
+				visionMesh.SetVertices(vertices);
 
 				yield return visionUpdateWait;
 			}
