@@ -9,10 +9,7 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private GameObject playerPrefab = null;
 
-		[SerializeField]
 		private GameObject localPlayer = null;
-
-		private bool hasPhotonObject = false;
 
 		// This is for handling offline mode when launching straight into the scene in-editor.
 		// Todo: Move this into an in-game network manager.
@@ -21,13 +18,15 @@ namespace CCB.Roguelike
 
 		private void BuildPhotonObject()
 		{
-			if (!hasPhotonObject)
+			Vector3 position = Vector3.zero;
+
+			if (localPlayer != null)
 			{
-				Vector3 position = localPlayer.GetComponentInChildren<Rigidbody2D>().position;
-				Destroy(localPlayer);
-				localPlayer = PhotonNetwork.Instantiate(playerPrefab.name, position, Quaternion.identity);
-				hasPhotonObject = true;
+				position = localPlayer.GetComponentInChildren<Rigidbody2D>().position;
+				PhotonNetwork.Destroy(localPlayer);
 			}
+
+			localPlayer = PhotonNetwork.Instantiate(playerPrefab.name, position, Quaternion.identity);
 		}
 
 		private void Start()

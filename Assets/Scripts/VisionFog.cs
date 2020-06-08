@@ -32,7 +32,7 @@ namespace CCB.Roguelike
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
-		private float minimumRadius = 1.0f;
+		private float minimumViewDistance = 0.5f;
 
 		private Mesh visionMesh = null;
 		private Vector3[] vertices = null;
@@ -92,25 +92,35 @@ namespace CCB.Roguelike
 
 				origin = visionSource.transform.position;
 				angle = halfFovRadians + lookAngle * (Mathf.PI / 180.0f);
-				vertices[0] = transform.InverseTransformPoint(origin);
+				Vector3 originPoint = transform.InverseTransformPoint(origin);
+				vertices[0] = originPoint;
 				float totalAngle = 0.0f;
 
 				for (int i = 1; i <= rayCount; i++)
 				{
 					rayVector.Set(Mathf.Cos(angle), Mathf.Sin(angle));
 					localRayVector = transform.InverseTransformDirection(rayVector);
-					float distance = totalAngle <= fovRadians ? viewDistance : minimumRadius;
+					bool inForwardArc = totalAngle <= fovRadians;
 
-					// Todo: Move the vision start buffer thing (* 0.5f) somewhere else not hard-coded.
-					// Todo: Shorten the ray length equal to the increase caused by the start buffer distance.
-					if (Physics2D.RaycastNonAlloc(origin + localRayVector * 0.45f, rayVector, rayHitArray, distance, solidObjectLayer) == 0)
+					// Todo: Move the vision start buffer thing (* 0.45f) somewhere else not hard-coded.
+					if (inForwardArc)
 					{
-						vertices[i] = transform.InverseTransformPoint(origin) + localRayVector * distance;
+						// Hit nothing in the forward view arc.
+						if (Physics2D.RaycastNonAlloc(origin, rayVector, rayHitArray, viewDistance, solidObjectLayer) == 0)
+						{
+							vertices[i] = originPoint + localRayVector * viewDistance;
+						}
+						// Hit something in the forward view arc.
+						else
+						{
+							// Todo: Instead of the padding here, have vision go until it is no longer hitting a collider.
+							vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point) + localRayVector * wallVisionDepth;
+						}
 					}
+					// In the rear view arc.
 					else
 					{
-						// Todo: Instead of the padding here, have vision go until it is no longer hitting a collider.
-						vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point) + localRayVector * wallVisionDepth;
+						vertices[i] = originPoint + localRayVector * minimumViewDistance;
 					}
 
 					totalAngle += angleIncrease;
