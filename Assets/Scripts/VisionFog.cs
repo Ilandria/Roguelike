@@ -20,10 +20,6 @@ namespace CCB.Roguelike
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
-		private float wallVisionDepth = 0.2f;
-
-		// Todo: Move this into PlayerCharacter.
-		[SerializeField]
 		private float fov = 220.0f;
 
 		// Todo: Move this into PlayerCharacter.
@@ -114,7 +110,7 @@ namespace CCB.Roguelike
 						else
 						{
 							// Todo: Instead of the padding here, have vision go until it is no longer hitting a collider.
-							vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point) + localRayVector * wallVisionDepth;
+							vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point) + localRayVector * minimumViewDistance;
 						}
 					}
 					// In the rear view arc.
