@@ -83,6 +83,9 @@ namespace CCB.Roguelike
 
 		private void Awake()
 		{
+			// Todo: Move this out to some options object - don't hardcode it here.
+			Application.targetFrameRate = 60;
+
 			foreach (Object loadable in loadables)
 			{
 				if (loadable as ILoadable == null)

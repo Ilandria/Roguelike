@@ -30,6 +30,7 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private float minimumViewDistance = 0.5f;
 
+		private readonly float deg2Rad = Mathf.PI / 180.0f;
 		private Mesh visionMesh = null;
 		private Vector3[] vertices = null;
 		private Vector2[] uv = null;
@@ -44,15 +45,15 @@ namespace CCB.Roguelike
 		private WaitForSeconds visionUpdateWait = null;
 		private float fovRadians = 0.0f;
 		private float halfFovRadians = 0.0f;
+		private float solidObjectViewFactor = 0.0f;
 		
 		public void OnEnable()
 		{
 			visionMesh = new Mesh();
 			GetComponent<MeshFilter>().mesh = visionMesh;
 
-			fovRadians = fov * (Mathf.PI / 180.0f);
-			halfFovRadians = fovRadians / 2.0f;
 			solidObjectLayer = LayerMask.GetMask("Solid Objects"); // Todo: Don't hardcode this.
+
 			angleIncrease = Mathf.PI * 2.0f / rayCount;
 			int numVertices = rayCount + 1; // +1 to account for the center vertex.
 			vertices = new Vector3[numVertices];
@@ -71,8 +72,17 @@ namespace CCB.Roguelike
 			visionMesh.SetUVs(0, uv);
 			visionMesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
+			ReconfigureVisionMesh();
 			visionUpdateWait = new WaitForSeconds(visionUpdateRate);
 			StartCoroutine(UpdateVision());
+		}
+
+		// Todo: Use this once any time the player's vision needs to fundamentally change.
+		public void ReconfigureVisionMesh()
+		{
+			fovRadians = fov * deg2Rad;
+			halfFovRadians = fovRadians / 2.0f;
+			solidObjectViewFactor = 1.0f - 1.0f / (minimumViewDistance + 1.0f); // Todo: Don't hardcode this. Approaches 1 at x => inf., 0.5 at x = 1.
 		}
 
 		public IEnumerator UpdateVision()
@@ -87,7 +97,7 @@ namespace CCB.Roguelike
 				}
 
 				origin = visionSource.transform.position;
-				angle = halfFovRadians + lookAngle * (Mathf.PI / 180.0f);
+				angle = halfFovRadians + lookAngle * deg2Rad;
 				Vector3 originPoint = transform.InverseTransformPoint(origin);
 				vertices[0] = originPoint;
 				float totalAngle = 0.0f;
@@ -98,24 +108,25 @@ namespace CCB.Roguelike
 					localRayVector = transform.InverseTransformDirection(rayVector);
 					bool inForwardArc = totalAngle <= fovRadians;
 
-					// Todo: Move the vision start buffer thing (* 0.45f) somewhere else not hard-coded.
 					if (inForwardArc)
 					{
+						// Todo: Remove all of this minimumViewDistance stuff from here after adding a circle stencil mesh to depict that.
 						// Hit nothing in the forward view arc.
-						if (Physics2D.RaycastNonAlloc(origin, rayVector, rayHitArray, viewDistance, solidObjectLayer) == 0)
+						if (Physics2D.RaycastNonAlloc(origin + localRayVector * minimumViewDistance, rayVector, rayHitArray, viewDistance - minimumViewDistance, solidObjectLayer) == 0)
 						{
 							vertices[i] = originPoint + localRayVector * viewDistance;
 						}
 						// Hit something in the forward view arc.
 						else
 						{
-							// Todo: Instead of the padding here, have vision go until it is no longer hitting a collider.
-							vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point) + localRayVector * minimumViewDistance;
+							// Todo: Find a better way to allow the player to see slightly into solid objects (just so they can see the object). Disable stencil mask while looking at, maybe?
+							vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point);// + localRayVector * solidObjectViewFactor;
 						}
 					}
 					// In the rear view arc.
 					else
 					{
+						// Todo: Instead of having a full 360 mesh generated, just use a 2nd mesh (a circle) with stencil writing shader to depict this. Will speed up performance and make math easier.
 						vertices[i] = originPoint + localRayVector * minimumViewDistance;
 					}
 

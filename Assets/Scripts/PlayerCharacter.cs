@@ -55,14 +55,14 @@ namespace CCB.Roguelike
 
 		public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 		{
-			if (stream.IsWriting)
+			if (stream.IsWriting && photonView.IsMine)
 			{
 				stream.SendNext(TargetPosition.x);
 				stream.SendNext(TargetPosition.y);
 				stream.SendNext(LookDirection.x);
 				stream.SendNext(LookDirection.y);
 			}
-			else
+			else if (stream.IsReading && !photonView.IsMine)
 			{
 				TargetPosition.Set((float)stream.ReceiveNext(), (float)stream.ReceiveNext());
 				LookDirection.Set((float)stream.ReceiveNext(), (float)stream.ReceiveNext());

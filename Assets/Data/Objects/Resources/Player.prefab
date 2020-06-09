@@ -59,7 +59,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 0.4
+  m_PointLightOuterRadius: 0.3
   m_PointLightDistance: 3
   m_PointLightQuality: 1
   m_ShapeLightParametricSides: 8
@@ -300,7 +300,7 @@ MonoBehaviour:
   visionUpdateRate: 0.016666668
   fov: 90
   viewDistance: 3
-  minimumViewDistance: 0.45
+  minimumViewDistance: 0.4
 --- !u!33 &6479828646721434909
 MeshFilter:
   m_ObjectHideFlags: 0
