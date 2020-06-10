@@ -118,6 +118,8 @@ namespace CCB.Roguelike
 					// Vision ray hit something.
 					else
 					{
+						/* Todo: Add a way to toggle the ability to see through walls. This should  add some kind of view distance penalty that's
+						 * configurable between "no penalty" and "normal vision limited by walls". */
 						// Distance from the player to the maximum depth within the solid object that the player could see.
 						float viewBlockDistance = Vector3.Distance(rayHitArray[0].point + rayVector * solidObjectViewFactor, origin);
 						// To prevent seeing through walls, either use the effective view distance or the point within the solid object, whichever is shorter.
