@@ -717,6 +717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92db39826e6b5d4aaa80565f55587d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eyeTransform: {fileID: 1600817645851303520}
   turnSpeed: 0.03
   turnTargetUpdateRate: 0.1
 --- !u!50 &2287323573003172956

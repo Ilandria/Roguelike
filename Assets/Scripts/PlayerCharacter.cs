@@ -6,6 +6,9 @@ namespace CCB.Roguelike
 {
 	public class PlayerCharacter : MonoBehaviourPun, IPunObservable
 	{
+		[SerializeField]
+		private Transform eyeTransform = null;
+
 		// Todo: This needs to be hooked up to character stats and not hard-coded.
 		[SerializeField]
 		[Range(0.0f, 0.25f)]
@@ -16,17 +19,25 @@ namespace CCB.Roguelike
 		private float turnTargetUpdateRate = 0.25f;
 		private WaitForSeconds turnUpdateWait = null;
 
-		// Todo: Down the road I may want to make this not a direct setter so I can control when it's available.
-		public Vector2 TargetPosition { get; set; } = Vector2.zero;
+		private Vector2 targetPosition = Vector2.zero;
+		public Vector2 TargetPosition
+		{
+			get => targetPosition;
+			set
+			{
+				targetPosition.Set(value.x, value.y);
+			}
+		}
 
-		public Vector2 LookDirection { get; private set; } = Vector2.down;
+		private Vector2 lookDirection = Vector2.down;
+		public Vector2 LookDirection => lookDirection;
 
 		private Vector2 targetLookDirection = Vector2.down;
 
 		private void OnEnable()
 		{
 			TargetPosition = transform.position;
-			LookDirection = Vector2.down;
+			lookDirection = Vector2.down;
 
 			// Look & targets are only simulated for the local player. We'll just sync the look & targets from networked players.
 			if (photonView.IsMine)
@@ -38,17 +49,19 @@ namespace CCB.Roguelike
 
 		private void FixedUpdate()
 		{
+			// Other players have their LookDirection set directly in OnPhotonSerializeView.
 			if (photonView.IsMine)
 			{
-				LookDirection = Vector3.RotateTowards(LookDirection, targetLookDirection, turnSpeed, 0.0f);
+				lookDirection = Vector3.RotateTowards(LookDirection, targetLookDirection, turnSpeed, 0.0f);
 			}
 		}
 
 		private IEnumerator UpdateTargetLookDirection()
 		{
+			// This coroutine is only started for the local photon view, so we don't need to check that (see OnEnable).
 			while (isActiveAndEnabled)
 			{
-				targetLookDirection = (TargetPosition - (Vector2)transform.position).normalized;
+				targetLookDirection = (TargetPosition - (Vector2)eyeTransform.position).normalized;
 				yield return turnUpdateWait;
 			}
 		}
@@ -62,10 +75,10 @@ namespace CCB.Roguelike
 				stream.SendNext(LookDirection.x);
 				stream.SendNext(LookDirection.y);
 			}
-			else if (stream.IsReading && !photonView.IsMine)
+			else if (!photonView.IsMine)
 			{
 				TargetPosition.Set((float)stream.ReceiveNext(), (float)stream.ReceiveNext());
-				LookDirection.Set((float)stream.ReceiveNext(), (float)stream.ReceiveNext());
+				lookDirection.Set((float)stream.ReceiveNext(), (float)stream.ReceiveNext());
 			}
 		}
 	}

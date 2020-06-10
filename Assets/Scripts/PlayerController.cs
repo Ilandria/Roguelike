@@ -24,6 +24,8 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private float backstepMultiplier = 0.75f;
 
+		/* Todo: These movement stats need to be pulled out into a movement system. Also the penalties for non-forward 
+		 movement should be much less severe when walking compared to running. These values are probably good for running. */
 		[SerializeField]
 		private float strafeMultiplier = 0.5f;
 
