@@ -300,7 +300,7 @@ MonoBehaviour:
   visionUpdateRate: 0.016666668
   fov: 90
   viewDistance: 3
-  minimumViewDistance: 0.4
+  minViewDistance: 0.5
 --- !u!33 &6479828646721434909
 MeshFilter:
   m_ObjectHideFlags: 0

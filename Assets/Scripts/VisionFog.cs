@@ -28,7 +28,7 @@ namespace CCB.Roguelike
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
-		private float minimumViewDistance = 0.5f;
+		private float minViewDistance = 0.5f;
 
 		private readonly float deg2Rad = Mathf.PI / 180.0f;
 		private Mesh visionMesh = null;
@@ -82,7 +82,7 @@ namespace CCB.Roguelike
 		{
 			fovRadians = fov * deg2Rad;
 			halfFovRadians = fovRadians / 2.0f;
-			solidObjectViewFactor = 1.0f - 1.0f / (minimumViewDistance + 1.0f); // Todo: Don't hardcode this. Approaches 1 at x => inf., 0.5 at x = 1.
+			solidObjectViewFactor = 1.0f - 1.0f / (minViewDistance + 1.0f); // Todo: Don't hardcode this. Approaches 1 at x => inf., 0.5 at x = 1.
 		}
 
 		public IEnumerator UpdateVision()
@@ -98,36 +98,30 @@ namespace CCB.Roguelike
 
 				origin = visionSource.transform.position;
 				angle = halfFovRadians + lookAngle * deg2Rad;
-				Vector3 originPoint = transform.InverseTransformPoint(origin);
-				vertices[0] = originPoint;
+				Vector3 localOrigin = transform.InverseTransformPoint(origin);
+				vertices[0] = localOrigin;
 				float totalAngle = 0.0f;
 
 				for (int i = 1; i <= rayCount; i++)
 				{
 					rayVector.Set(Mathf.Cos(angle), Mathf.Sin(angle));
 					localRayVector = transform.InverseTransformDirection(rayVector);
-					bool inForwardArc = totalAngle <= fovRadians;
 
-					if (inForwardArc)
+					// We can see farther in the forward view arc.
+					float effectiveViewDistance = totalAngle <= fovRadians ? viewDistance : minViewDistance;
+
+					// Vision ray hit nothing.
+					if (Physics2D.RaycastNonAlloc(origin, rayVector, rayHitArray, effectiveViewDistance, solidObjectLayer) == 0)
 					{
-						// Todo: Remove all of this minimumViewDistance stuff from here after adding a circle stencil mesh to depict that.
-						// Hit nothing in the forward view arc.
-						if (Physics2D.RaycastNonAlloc(origin + localRayVector * minimumViewDistance, rayVector, rayHitArray, viewDistance - minimumViewDistance, solidObjectLayer) == 0)
-						{
-							vertices[i] = originPoint + localRayVector * viewDistance;
-						}
-						// Hit something in the forward view arc.
-						else
-						{
-							// Todo: Find a better way to allow the player to see slightly into solid objects (just so they can see the object). Disable stencil mask while looking at, maybe?
-							vertices[i] = transform.InverseTransformPoint(rayHitArray[0].point);// + localRayVector * solidObjectViewFactor;
-						}
+						vertices[i] = localOrigin + localRayVector * effectiveViewDistance;
 					}
-					// In the rear view arc.
+					// Vision ray hit something.
 					else
 					{
-						// Todo: Instead of having a full 360 mesh generated, just use a 2nd mesh (a circle) with stencil writing shader to depict this. Will speed up performance and make math easier.
-						vertices[i] = originPoint + localRayVector * minimumViewDistance;
+						// Distance from the player to the maximum depth within the solid object that the player could see.
+						float viewBlockDistance = Vector3.Distance(rayHitArray[0].point + rayVector * solidObjectViewFactor, origin);
+						// To prevent seeing through walls, either use the effective view distance or the point within the solid object, whichever is shorter.
+						vertices[i] = localOrigin + localRayVector * Mathf.Min(effectiveViewDistance, viewBlockDistance);
 					}
 
 					totalAngle += angleIncrease;
