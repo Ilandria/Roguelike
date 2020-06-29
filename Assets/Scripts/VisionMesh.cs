@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace CCB.Roguelike
 {
-	public class VisionFog : MonoBehaviour
+	public class VisionMesh : MonoBehaviour
 	{
 		[SerializeField]
 		private PlayerCharacter playerCharacter = null;
@@ -40,7 +39,7 @@ namespace CCB.Roguelike
 		private float angle = 0.0f;
 		private float angleIncrease = 0.0f;
 		private Vector3 origin = Vector3.zero;
-		private Vector2 rayVector = Vector2.zero;
+		private Vector2 rayHeading = Vector2.zero;
 		private Vector3 localRayVector = Vector3.zero;
 		private WaitForSeconds visionUpdateWait = null;
 		private float fovRadians = 0.0f;
@@ -104,26 +103,26 @@ namespace CCB.Roguelike
 
 				for (int i = 1; i <= rayCount; i++)
 				{
-					rayVector.Set(Mathf.Cos(angle), Mathf.Sin(angle));
-					localRayVector = transform.InverseTransformDirection(rayVector);
+					rayHeading.Set(Mathf.Cos(angle), Mathf.Sin(angle));
+					localRayVector = transform.InverseTransformDirection(rayHeading);
 
 					// We can see farther in the forward view arc.
-					float effectiveViewDistance = totalAngle <= fovRadians ? viewDistance : minViewDistance;
+					float unobstructedViewDistance = totalAngle <= fovRadians ? viewDistance : minViewDistance;
 
 					// Vision ray hit nothing.
-					if (Physics2D.RaycastNonAlloc(origin, rayVector, rayHitArray, effectiveViewDistance, solidObjectLayer) == 0)
+					if (Physics2D.RaycastNonAlloc(origin, rayHeading, rayHitArray, unobstructedViewDistance, solidObjectLayer) == 0)
 					{
-						vertices[i] = localOrigin + localRayVector * effectiveViewDistance;
+						vertices[i] = localOrigin + localRayVector * unobstructedViewDistance;
 					}
 					// Vision ray hit something.
 					else
 					{
-						/* Todo: Add a way to toggle the ability to see through walls. This should  add some kind of view distance penalty that's
+						/* Todo: Add a way to toggle the ability to see through walls. This should add some kind of view distance penalty that's
 						 * configurable between "no penalty" and "normal vision limited by walls". */
 						// Distance from the player to the maximum depth within the solid object that the player could see.
-						float viewBlockDistance = Vector3.Distance(rayHitArray[0].point + rayVector * solidObjectViewFactor, origin);
+						float obstructedViewDistance = Vector3.Distance(rayHitArray[0].point + rayHeading * solidObjectViewFactor, origin);
 						// To prevent seeing through walls, either use the effective view distance or the point within the solid object, whichever is shorter.
-						vertices[i] = localOrigin + localRayVector * Mathf.Min(effectiveViewDistance, viewBlockDistance);
+						vertices[i] = localOrigin + localRayVector * Mathf.Min(unobstructedViewDistance, obstructedViewDistance);
 					}
 
 					totalAngle += angleIncrease;
@@ -131,7 +130,6 @@ namespace CCB.Roguelike
 				}
 
 				visionMesh.SetVertices(vertices);
-
 				yield return visionUpdateWait;
 			}
 		}
