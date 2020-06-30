@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using Unity.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace CCB.Roguelike
@@ -14,10 +12,10 @@ namespace CCB.Roguelike
 		private GameObject visionSource = null;
 
 		[SerializeField]
-		private int rayCount = 90;
+		private int rayCount = 720;
 
 		[SerializeField]
-		private float visionUpdateRate = 0.2f;
+		private float visionUpdateRate = 0.1f;
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
@@ -29,46 +27,65 @@ namespace CCB.Roguelike
 
 		// Todo: Move this into PlayerCharacter.
 		[SerializeField]
-		private float minViewDistance = 0.6f;
+		private float minViewDistance = 0.5f;
 
-		private NativeArray<float2> vertices;
 		private readonly float deg2Rad = Mathf.PI / 180.0f;
+		private Mesh visionMesh = null;
+		private Vector3[] vertices = null;
+		private Vector2[] uv = null;
+		private int[] indices = null;
 		private RaycastHit2D[] rayHitArray = new RaycastHit2D[1] { new RaycastHit2D() };
 		private int solidObjectLayer = -1;
+		private float angle = 0.0f;
 		private float angleIncrease = 0.0f;
+		private Vector3 origin = Vector3.zero;
 		private Vector2 rayHeading = Vector2.zero;
+		private Vector3 localRayVector = Vector3.zero;
 		private WaitForSeconds visionUpdateWait = null;
+		private float fovRadians = 0.0f;
+		private float halfFovRadians = 0.0f;
+		private float solidObjectViewFactor = 0.0f;
 		
 		public void OnEnable()
 		{
+			visionMesh = new Mesh();
+			GetComponent<MeshFilter>().mesh = visionMesh;
+
 			solidObjectLayer = LayerMask.GetMask("Solid Objects"); // Todo: Don't hardcode this.
 
 			angleIncrease = Mathf.PI * 2.0f / rayCount;
+			int numVertices = rayCount + 1; // +1 to account for the center vertex.
+			vertices = new Vector3[numVertices];
+			uv = new Vector2[numVertices];
+			indices = new int[rayCount * 3];
 
-			if (vertices.IsCreated)
+			for (int ray = 0; ray < rayCount; ray++)
 			{
-				vertices.Dispose();
+				int tri = ray * 3;
+				indices[tri + 0] = 0;
+				indices[tri + 1] = ray + 1;
+				indices[tri + 2] = ray + 2 < numVertices ? ray + 2 : 1;
 			}
 
-			vertices = new NativeArray<float2>(rayCount + 1, Allocator.Persistent);
+			visionMesh.SetVertices(vertices);
+			visionMesh.SetUVs(0, uv);
+			visionMesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
+			ReconfigureVisionMesh();
 			visionUpdateWait = new WaitForSeconds(visionUpdateRate);
 			StartCoroutine(UpdateVision());
 		}
 
-		private void OnDisable()
+		// Todo: Use this once any time the player's vision needs to fundamentally change.
+		public void ReconfigureVisionMesh()
 		{
-			if (vertices.IsCreated)
-			{
-				vertices.Dispose();
-			}
+			fovRadians = fov * deg2Rad;
+			halfFovRadians = fovRadians / 2.0f;
+			solidObjectViewFactor = 1.0f - 1.0f / (minViewDistance + 1.0f); // Todo: Don't hardcode this. Approaches 1 at x => inf., 0.5 at x = 1.
 		}
 
 		public IEnumerator UpdateVision()
 		{
-			float fovRadians = fov * deg2Rad;
-			float halfFovRadians = fovRadians / 2.0f;
-
 			while (isActiveAndEnabled)
 			{
 				// Turns Vector3.Angle into a 0-360 range to properly offset vision cone.
@@ -78,14 +95,16 @@ namespace CCB.Roguelike
 					lookAngle = 360.0f - lookAngle;
 				}
 
-				Vector2 origin = visionSource.transform.position;
-				vertices[0] = new float2(origin.x, origin.y);
-				float angle = halfFovRadians + lookAngle * deg2Rad;
+				origin = visionSource.transform.position;
+				angle = halfFovRadians + lookAngle * deg2Rad;
+				Vector3 localOrigin = transform.InverseTransformPoint(origin);
+				vertices[0] = localOrigin;
 				float totalAngle = 0.0f;
 
 				for (int i = 1; i <= rayCount; i++)
 				{
 					rayHeading.Set(Mathf.Cos(angle), Mathf.Sin(angle));
+					localRayVector = transform.InverseTransformDirection(rayHeading);
 
 					// We can see farther in the forward view arc.
 					float unobstructedViewDistance = totalAngle <= fovRadians ? viewDistance : minViewDistance;
@@ -93,32 +112,25 @@ namespace CCB.Roguelike
 					// Vision ray hit nothing.
 					if (Physics2D.RaycastNonAlloc(origin, rayHeading, rayHitArray, unobstructedViewDistance, solidObjectLayer) == 0)
 					{
-						vertices[i] = origin + rayHeading * unobstructedViewDistance;
+						vertices[i] = localOrigin + localRayVector * unobstructedViewDistance;
 					}
 					// Vision ray hit something.
 					else
 					{
-						vertices[i] = rayHitArray[0].point;
+						/* Todo: Add a way to toggle the ability to see through walls. This should add some kind of view distance penalty that's
+						 * configurable between "no penalty" and "normal vision limited by walls". */
+						// Distance from the player to the maximum depth within the solid object that the player could see.
+						float obstructedViewDistance = Vector3.Distance(rayHitArray[0].point + rayHeading * solidObjectViewFactor, origin);
+						// To prevent seeing through walls, either use the effective view distance or the point within the solid object, whichever is shorter.
+						vertices[i] = localOrigin + localRayVector * Mathf.Min(unobstructedViewDistance, obstructedViewDistance);
 					}
 
 					totalAngle += angleIncrease;
 					angle -= angleIncrease;
 				}
 
+				visionMesh.SetVertices(vertices);
 				yield return visionUpdateWait;
-			}
-		}
-
-		private void OnDrawGizmos()
-		{
-			if (vertices.IsCreated)
-			{
-				Vector3 start = new Vector3(vertices[0].x, vertices[0].y, 0);
-				Gizmos.color = Color.cyan;
-				for (int i = 1; i < vertices.Length; i++)
-				{
-					Gizmos.DrawLine(start, new Vector3(vertices[i].x, vertices[i].y, 0));
-				}
 			}
 		}
 	}
