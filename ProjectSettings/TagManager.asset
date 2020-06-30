@@ -30,8 +30,8 @@ TagManager:
   - 
   - Lighting
   - 
-  - Vision Mask
-  - 
+  - Fog of War
+  - Vision
   - 
   - Post Processing
   - 
@@ -43,4 +43,7 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Fog
+    uniqueID: 4023195969
     locked: 0

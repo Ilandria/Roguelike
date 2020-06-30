@@ -66,9 +66,6 @@ namespace CCB.Roguelike
 
 		public IEnumerator UpdateVision()
 		{
-			float fovRadians = fov * deg2Rad;
-			float halfFovRadians = fovRadians / 2.0f;
-
 			while (isActiveAndEnabled)
 			{
 				// Turns Vector3.Angle into a 0-360 range to properly offset vision cone.
@@ -80,6 +77,8 @@ namespace CCB.Roguelike
 
 				Vector2 origin = visionSource.transform.position;
 				vertices[0] = new float2(origin.x, origin.y);
+				float fovRadians = fov * deg2Rad;
+				float halfFovRadians = fovRadians / 2.0f;
 				float angle = halfFovRadians + lookAngle * deg2Rad;
 				float totalAngle = 0.0f;
 
