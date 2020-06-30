@@ -9,7 +9,7 @@ namespace CCB.Roguelike
 		private PlayerCharacter playerCharacter = null;
 
 		[SerializeField]
-		private GameObject visionSource = null;
+		private Transform visionSource = null;
 
 		[SerializeField]
 		private int rayCount = 720;
@@ -36,15 +36,10 @@ namespace CCB.Roguelike
 		private int[] indices = null;
 		private RaycastHit2D[] rayHitArray = new RaycastHit2D[1] { new RaycastHit2D() };
 		private int solidObjectLayer = -1;
-		private float angle = 0.0f;
 		private float angleIncrease = 0.0f;
-		private Vector3 origin = Vector3.zero;
 		private Vector2 rayHeading = Vector2.zero;
 		private Vector3 localRayVector = Vector3.zero;
 		private WaitForSeconds visionUpdateWait = null;
-		private float fovRadians = 0.0f;
-		private float halfFovRadians = 0.0f;
-		private float solidObjectViewFactor = 0.0f;
 		
 		public void OnEnable()
 		{
@@ -71,17 +66,8 @@ namespace CCB.Roguelike
 			visionMesh.SetUVs(0, uv);
 			visionMesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
-			ReconfigureVisionMesh();
 			visionUpdateWait = new WaitForSeconds(visionUpdateRate);
 			StartCoroutine(UpdateVision());
-		}
-
-		// Todo: Use this once any time the player's vision needs to fundamentally change.
-		public void ReconfigureVisionMesh()
-		{
-			fovRadians = fov * deg2Rad;
-			halfFovRadians = fovRadians / 2.0f;
-			solidObjectViewFactor = 1.0f - 1.0f / (minViewDistance + 1.0f); // Todo: Don't hardcode this. Approaches 1 at x => inf., 0.5 at x = 1.
 		}
 
 		public IEnumerator UpdateVision()
@@ -95,9 +81,12 @@ namespace CCB.Roguelike
 					lookAngle = 360.0f - lookAngle;
 				}
 
-				origin = visionSource.transform.position;
-				angle = halfFovRadians + lookAngle * deg2Rad;
-				Vector3 localOrigin = transform.InverseTransformPoint(origin);
+				Vector3 worldOrigin = visionSource.position;
+				float solidObjectViewFactor = 1.0f - 1.0f / (minViewDistance + 1.0f); // Todo: Don't hardcode this. Approaches 1 at x => inf., 0.5 at x = 1.
+				float fovRadians = fov * deg2Rad;
+				float halfFovRadians = fovRadians / 2.0f;
+				float angle = halfFovRadians + lookAngle * deg2Rad;
+				Vector3 localOrigin = transform.InverseTransformPoint(worldOrigin);
 				vertices[0] = localOrigin;
 				float totalAngle = 0.0f;
 
@@ -110,7 +99,7 @@ namespace CCB.Roguelike
 					float unobstructedViewDistance = totalAngle <= fovRadians ? viewDistance : minViewDistance;
 
 					// Vision ray hit nothing.
-					if (Physics2D.RaycastNonAlloc(origin, rayHeading, rayHitArray, unobstructedViewDistance, solidObjectLayer) == 0)
+					if (Physics2D.RaycastNonAlloc(worldOrigin, rayHeading, rayHitArray, unobstructedViewDistance, solidObjectLayer) == 0)
 					{
 						vertices[i] = localOrigin + localRayVector * unobstructedViewDistance;
 					}
@@ -120,7 +109,7 @@ namespace CCB.Roguelike
 						/* Todo: Add a way to toggle the ability to see through walls. This should add some kind of view distance penalty that's
 						 * configurable between "no penalty" and "normal vision limited by walls". */
 						// Distance from the player to the maximum depth within the solid object that the player could see.
-						float obstructedViewDistance = Vector3.Distance(rayHitArray[0].point + rayHeading * solidObjectViewFactor, origin);
+						float obstructedViewDistance = Vector3.Distance(rayHitArray[0].point + rayHeading * solidObjectViewFactor, worldOrigin);
 						// To prevent seeing through walls, either use the effective view distance or the point within the solid object, whichever is shorter.
 						vertices[i] = localOrigin + localRayVector * Mathf.Min(unobstructedViewDistance, obstructedViewDistance);
 					}

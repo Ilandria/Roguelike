@@ -13,10 +13,10 @@ TagManager:
   - UI
   - 
   - 
+  - Vision Mask
+  - 
+  - 
   - Background
-  - 
-  - 
-  - 
   - Shadow
   - 
   - 
@@ -30,17 +30,23 @@ TagManager:
   - 
   - Lighting
   - 
-  - Vision Mask
   - 
+  - Fog
   - 
   - Post Processing
   - 
   - 
   - Meta
   m_SortingLayers:
+  - name: Vision Mask
+    uniqueID: 2679076007
+    locked: 0
   - name: Background
     uniqueID: 2994237777
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Fog
+    uniqueID: 1673097727
     locked: 0

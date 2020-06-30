@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 7855120533129926304}
   - component: {fileID: 8600021300698693064}
   - component: {fileID: 6479828646721434909}
-  m_Layer: 25
+  m_Layer: 8
   m_Name: Vision Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ MeshRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
-  m_RenderingLayerMask: 1003
+  m_RenderingLayerMask: 32
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: afffc75bde4c69b4e8a741ae01794004, type: 2}
@@ -279,9 +279,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -100
+  m_SortingLayerID: -1615891289
+  m_SortingLayer: -2
+  m_SortingOrder: 0
 --- !u!114 &8600021300698693064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,12 +295,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCharacter: {fileID: 648044380126800629}
-  visionSource: {fileID: 1370779645014484684}
+  visionSource: {fileID: 1600817645851303520}
   rayCount: 360
-  visionUpdateRate: 0.05
+  visionUpdateRate: 0.02
   fov: 90
   viewDistance: 3
-  minViewDistance: 0.6
+  minViewDistance: 0.5
 --- !u!33 &6479828646721434909
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -514,7 +514,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 345053238
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
