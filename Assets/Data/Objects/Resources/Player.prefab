@@ -297,7 +297,7 @@ MonoBehaviour:
   playerCharacter: {fileID: 648044380126800629}
   visionSource: {fileID: 1600817645851303520}
   rayCount: 360
-  visionUpdateRate: 0.02
+  visionUpdateRate: 0.033333335
   fov: 90
   viewDistance: 3
   minViewDistance: 0.5
