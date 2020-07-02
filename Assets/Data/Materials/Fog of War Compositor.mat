@@ -27,5 +27,13 @@ Material:
         m_Texture: {fileID: 8400000, guid: e24abc4c3dbd7b84f833fe27f996256e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - fog1Tex:
+        m_Texture: {fileID: 2800000, guid: 44b43d790c3a75e4083a6bf9824bd0cf, type: 3}
+        m_Scale: {x: 1000, y: 1000}
+        m_Offset: {x: 0, y: 0}
+    - fog2Tex:
+        m_Texture: {fileID: 2800000, guid: 5d6f24166b2471042820a6f7d6aac3e5, type: 3}
+        m_Scale: {x: 1000, y: 1000}
+        m_Offset: {x: 0, y: 0}
     m_Floats: []
     m_Colors: []

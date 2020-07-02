@@ -44,7 +44,7 @@
             {
                 fixed persistentVision = tex2D(_MainTex, i.uv).r;
                 fixed newVision = tex2D(currentFrameVision, i.uv).r;
-                fixed fogAmount = saturate(1 - persistentVision * 0.25 - newVision);
+                fixed fogAmount = saturate(1 - persistentVision * 0.8 - newVision);
                 return fixed4(0, 0, 0, fogAmount);
             }
             ENDCG
