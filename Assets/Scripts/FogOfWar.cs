@@ -5,16 +5,16 @@ namespace CCB.Roguelike
 	public class FogOfWar : MonoBehaviour
 	{
 		[SerializeField]
-		private RenderTexture persistentVisionTex;
+		private RenderTexture persistentVisionTex = null;
 
 		[SerializeField]
-		private Material persistentVisionMat;
+		private Material persistentVisionMat = null;
 
 		[SerializeField]
-		private RenderTexture fogOfWarTex;
+		private RenderTexture fogOfWarTex = null;
 
 		[SerializeField]
-		private Material fogOfWarMat;
+		private Material fogOfWarMat = null;
 
 		private void Start()
 		{

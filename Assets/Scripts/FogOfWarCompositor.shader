@@ -1,4 +1,4 @@
-﻿Shader "CCB/FogOfWar"
+﻿Shader "CCB/FogOfWarCompositor"
 {
     Properties
     {
@@ -7,15 +7,6 @@
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "Queue"="Geometry-1" }
-
-        Stencil
-        {
-            Ref 1
-            Comp Always
-            Pass Replace
-		}
-
         Cull Off ZWrite Off ZTest Always
 
         Pass
@@ -54,7 +45,6 @@
                 fixed persistentVision = tex2D(_MainTex, i.uv).r;
                 fixed newVision = tex2D(currentFrameVision, i.uv).r;
                 fixed fogAmount = saturate(1 - persistentVision * 0.25 - newVision);
-                clip(fogAmount - 0.1);
                 return fixed4(0, 0, 0, fogAmount);
             }
             ENDCG
