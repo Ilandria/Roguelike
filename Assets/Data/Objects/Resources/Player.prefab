@@ -298,9 +298,9 @@ MonoBehaviour:
   visionSource: {fileID: 1600817645851303520}
   rayCount: 360
   visionUpdateRate: 0.033333335
-  fov: 90
+  fov: 60
   viewDistance: 3
-  minViewDistance: 0.5
+  minViewDistance: 1
 --- !u!33 &6479828646721434909
 MeshFilter:
   m_ObjectHideFlags: 0

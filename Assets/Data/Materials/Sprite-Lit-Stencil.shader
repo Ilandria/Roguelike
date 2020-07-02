@@ -1,4 +1,4 @@
-Shader "CCB/2D/Sprite-Lit-Default"
+Shader "CCB/2D/Sprite-Lit-Stencil"
 {
     Properties
     {
