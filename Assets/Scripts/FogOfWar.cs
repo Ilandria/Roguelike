@@ -18,16 +18,26 @@ namespace CCB.Roguelike
 
 		private void Start()
 		{
-			ResetFogOfWar();
+			FillFog();
 		}
 
-		public void ResetFogOfWar()
+		public void FillFog()
 		{
 			RenderTexture previousTexture = RenderTexture.active;
 			RenderTexture.active = persistentVisionTex;
 			GL.Clear(true, true, Color.black);
 			RenderTexture.active = fogOfWarTex;
 			GL.Clear(true, true, Color.black);
+			RenderTexture.active = previousTexture;
+		}
+
+		public void ClearFog()
+		{
+			RenderTexture previousTexture = RenderTexture.active;
+			RenderTexture.active = persistentVisionTex;
+			GL.Clear(true, true, Color.white);
+			RenderTexture.active = fogOfWarTex;
+			GL.Clear(true, true, Color.clear);
 			RenderTexture.active = previousTexture;
 		}
 

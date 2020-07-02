@@ -3,6 +3,7 @@
     Properties
     {
         _MainTex("Current Frame Vision", 2D) = "white" {}
+        ditherTex("Dither", 2D) = "white" {}
     }
     SubShader
     {
@@ -39,6 +40,9 @@
             };
 
             uniform sampler2D _MainTex;
+            uniform sampler2D ditherTex;
+            float4 _MainTex_TexelSize;
+            float4 ditherTex_TexelSize;
 
             v2f vert (appdata v)
             {
@@ -48,14 +52,11 @@
                 return o;
             }
 
-            float random (float2 st)
-            {
-                return frac(sin(dot(st.xy, float2(12.9898,78.233))) * 43758.5453123);
-            }
-
             fixed4 frag (v2f i) : SV_Target
             {
-                clip(tex2D(_MainTex, i.uv).r - 0.001 - random(i.uv) * 0.75);
+                fixed visibility = tex2D(_MainTex, i.uv).r;
+                fixed dither = tex2D(ditherTex, i.uv * _MainTex_TexelSize.zw * ditherTex_TexelSize.zw).r;
+                clip(step(dither, visibility) - 0.5); // Step = 1 when frag visible, 0 otherwise. -0.5 is an arbitrary value to clip non-visible things.
                 return 0;
             }
 
