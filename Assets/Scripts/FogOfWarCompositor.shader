@@ -76,7 +76,7 @@
 				fixed4 texA = tex2D(fogTex1, uvwA.xy) * uvwA.z;
 				fixed4 texB = tex2D(fogTex1, uvwB.xy) * uvwB.z;
 
-				fixed3 fog1 = (texA.rgb + texB.rgb) * fixed3(1, 0.64, 0.47);
+				fixed3 fog1 = (texA.rgb + texB.rgb) * fixed3(1, 0.64, 0.47); // Todo: Cleanup magic number.
 				fog1 = pow(fog1, 4);
 
 				// Fog layer 2.
@@ -94,7 +94,7 @@
 				texA = tex2D(fogTex2, uvwA.xy) * uvwA.z;
 				texB = tex2D(fogTex2, uvwB.xy) * uvwB.z;
 
-				fixed3 fog2 = (texA.rgb + texB.rgb) * fixed3(0.47, 0.84, 1);
+				fixed3 fog2 = (texA.rgb + texB.rgb) * fixed3(0.47, 0.84, 1); // Todo: Cleanup magic number.
 				fog2 = pow(fog2, 4);
 
 				// Final output.

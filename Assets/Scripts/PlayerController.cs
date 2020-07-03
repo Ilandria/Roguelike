@@ -18,8 +18,12 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private Rigidbody2D playerRigidbody = null;
 
+		// Todo: All of these stats should be stored in a player data model.
 		[SerializeField]
 		private float moveForce = 300.0f;
+
+		[SerializeField]
+		private float sprintForceMultiplier = 2.0f;
 
 		[SerializeField]
 		private float backstepMultiplier = 0.75f;
@@ -37,6 +41,8 @@ namespace CCB.Roguelike
 		private Vector2 movementForceVector = Vector2.zero;
 		private float backstepForce = 0.0f;
 		private float strafeForce = 0.0f;
+		// Todo: Temporary sprinting for testing purposes. Remove this.
+		private bool isSprinting = false;
 
 		public void OnMove(InputValue inputValue)
 		{
@@ -53,6 +59,11 @@ namespace CCB.Roguelike
 			{
 				ViewportLookPosition = inputValue.Get<Vector2>() * 0.5f + half;
 			}
+		}
+
+		public void OnSprint(InputValue inputValue)
+		{
+			isSprinting = inputValue.isPressed;
 		}
 
 		private void Awake()
@@ -94,7 +105,10 @@ namespace CCB.Roguelike
 			float backstepSpeed = Mathf.Lerp(0.0f, backstepForce, -lookAlignment);
 			float strafeSpeed = Mathf.Lerp(strafeForce, 0.0f, strafeAlignment);
 
-			movementForceVector = inputAxis * (forwardSpeed + backstepSpeed + strafeSpeed);
+			float currentMoveSpeed = forwardSpeed + backstepSpeed + strafeSpeed;
+			currentMoveSpeed *= isSprinting ? sprintForceMultiplier : 1.0f;
+
+			movementForceVector = inputAxis * currentMoveSpeed;
 		}
 	}
 }

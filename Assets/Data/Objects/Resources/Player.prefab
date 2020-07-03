@@ -114,6 +114,7 @@ MonoBehaviour:
   playerCharacter: {fileID: 648044380126800629}
   playerRigidbody: {fileID: 2287323573003172956}
   moveForce: 150
+  sprintForceMultiplier: 2
   backstepMultiplier: 0.75
   strafeMultiplier: 0.5
 --- !u!114 &5926059021274364655
