@@ -9,8 +9,6 @@
 		fogTex2 ("Fog Texture 2", 2D) = "black" {}
 		fogSpeed1 ("Fog Speed 1", Float) = 0.1
 		fogSpeed2 ("Fog Speed 2", Float) = 0.2
-		minFogBrightness ("Min Fog Brightness", Float) = 0.02
-		maxFogBrightness ("Max Fog Brightness", Float) = 0.2
 
 		[NoScaleOffset] _FlowMap ("Flow (RG, A noise)", 2D) = "black" {}
 		_UJump ("U jump per phase", Range(-0.25, 0.25)) = 0.25
@@ -35,7 +33,7 @@
 
 			uniform sampler2D _MainTex, fogTex1, fogTex2, currentFrameVision;
 			uniform fixed4 fogTex1_ST, fogTex1_TexelSize, fogTex2_ST, fogTex2_TexelSize;
-			uniform fixed fogSpeed1, fogSpeed2, minFogBrightness, maxFogBrightness;
+			uniform fixed fogSpeed1, fogSpeed2;
 
 			uniform sampler2D _FlowMap;
 			uniform float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffset;
@@ -78,7 +76,8 @@
 				fixed4 texA = tex2D(fogTex1, uvwA.xy) * uvwA.z;
 				fixed4 texB = tex2D(fogTex1, uvwB.xy) * uvwB.z;
 
-				fixed3 fog1 = texA.rgb + texB.rgb;
+				fixed3 fog1 = (texA.rgb + texB.rgb) * fixed3(1, 0.64, 0.47);
+				fog1 = pow(fog1, 4);
 
 				// Fog layer 2.
 				fixed2 fog2uv = i.uv * fogTex2_TexelSize.zw * fogTex2_ST.xy;
@@ -95,15 +94,16 @@
 				texA = tex2D(fogTex2, uvwA.xy) * uvwA.z;
 				texB = tex2D(fogTex2, uvwB.xy) * uvwB.z;
 
-				fixed3 fog2 = texA.rgb + texB.rgb;
+				fixed3 fog2 = (texA.rgb + texB.rgb) * fixed3(0.47, 0.84, 1);
+				fog2 = pow(fog2, 4);
 
 				// Final output.
 				fixed persistentVision = tex2D(_MainTex, i.uv).r;
 				fixed newVision = tex2D(currentFrameVision, i.uv).r;
-				fixed fogDensity = saturate(1 - persistentVision * 0.95 - newVision);
-				fixed3 fogColour = fog1 * fog2;
-				fogDensity = saturate(fogDensity + fogColour.r*10*fogDensity);
-				fogColour = lerp(minFogBrightness, maxFogBrightness, fogColour);
+				fixed fogDensity = saturate(1 - persistentVision - newVision); // Todo: Cleanup magic number.
+				fixed3 fogColour = fog1 + fog2;
+				fixed avgFogColour = (fogColour.r + fogColour.g + fogColour.b) / 3.0;
+				fogDensity = saturate(fogDensity + avgFogColour*100*fogDensity); // Todo: Cleanup magic number.
 				return fixed4(fogColour, fogDensity);
 			}
 			ENDCG

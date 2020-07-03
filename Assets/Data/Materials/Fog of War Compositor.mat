@@ -53,13 +53,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _FlowOffset: 0
-    - _FlowStrength: 0.05
-    - _Speed: 0.33
+    - _FlowStrength: 0.2
+    - _Speed: 0.25
     - _Tiling: 2
     - _UJump: 0.25
     - _VJump: 0.25
     - fogSpeed1: 0.125
     - fogSpeed2: 0.1
-    - maxFogBrightness: 0.1
-    - minFogBrightness: 0.02
+    - maxFogBrightness: 1
+    - minFogBrightness: 0
     m_Colors: []
