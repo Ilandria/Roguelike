@@ -19,9 +19,17 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _FlowMap:
+        m_Texture: {fileID: 2800000, guid: 5126f3304d2084d7e824deb2e79c69ae, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 8400000, guid: 73cf130e26f80b0498b9ad4e49d99ea7, type: 2}
         m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - backgroundTex:
+        m_Texture: {fileID: 2800000, guid: 34a432d9db72d8a4e8c74962562111aa, type: 3}
+        m_Scale: {x: 0.01, y: 0.01}
         m_Offset: {x: 0, y: 0}
     - currentFrameVision:
         m_Texture: {fileID: 8400000, guid: e24abc4c3dbd7b84f833fe27f996256e, type: 2}
@@ -35,5 +43,23 @@ Material:
         m_Texture: {fileID: 2800000, guid: 5d6f24166b2471042820a6f7d6aac3e5, type: 3}
         m_Scale: {x: 1000, y: 1000}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
+    - fogTex1:
+        m_Texture: {fileID: 2800000, guid: 44b43d790c3a75e4083a6bf9824bd0cf, type: 3}
+        m_Scale: {x: 0.01, y: 0.01}
+        m_Offset: {x: 0, y: 0}
+    - fogTex2:
+        m_Texture: {fileID: 2800000, guid: 5d6f24166b2471042820a6f7d6aac3e5, type: 3}
+        m_Scale: {x: 0.005, y: 0.005}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _FlowOffset: 0
+    - _FlowStrength: 0.05
+    - _Speed: 0.33
+    - _Tiling: 2
+    - _UJump: 0.25
+    - _VJump: 0.25
+    - fogSpeed1: 0.125
+    - fogSpeed2: 0.1
+    - maxFogBrightness: 0.1
+    - minFogBrightness: 0.02
     m_Colors: []
