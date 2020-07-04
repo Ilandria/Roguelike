@@ -45,19 +45,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     - fogTex1:
         m_Texture: {fileID: 2800000, guid: 44b43d790c3a75e4083a6bf9824bd0cf, type: 3}
-        m_Scale: {x: 0.01, y: 0.01}
+        m_Scale: {x: 0.03, y: 0.03}
         m_Offset: {x: 0, y: 0}
     - fogTex2:
         m_Texture: {fileID: 2800000, guid: 5d6f24166b2471042820a6f7d6aac3e5, type: 3}
-        m_Scale: {x: 0.005, y: 0.005}
+        m_Scale: {x: 0.01, y: 0.01}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _FlowOffset: 0
-    - _FlowStrength: 0.2
-    - _Speed: 0.25
+    - _FlowOffset: -0.5
+    - _FlowStrength: 0.3
+    - _Speed: 0.1
     - _Tiling: 2
     - _UJump: 0.25
     - _VJump: 0.25
+    - fogScale1: 0.007
+    - fogScale2: 0.006
     - fogSpeed1: 0.125
     - fogSpeed2: 0.1
     - maxFogBrightness: 1

@@ -5,8 +5,10 @@
 		_MainTex ("Persistent Vision", 2D) = "white" {}
 		currentFrameVision("New Vision", 2D) = "white" {}
 
-		fogTex1 ("Fog Texture 1", 2D) = "black" {}
-		fogTex2 ("Fog Texture 2", 2D) = "black" {}
+		[NoScaleOffset] fogTex1 ("Fog Texture 1", 2D) = "black" {}
+		[NoScaleOffset] fogTex2 ("Fog Texture 2", 2D) = "black" {}
+		[PowerSlider(10.0)] fogScale1 ("Fog Scale 1", Range(0.001, 1)) = 0.03
+		[PowerSlider(10.0)] fogScale2 ("Fog Scale 2", Range(0.001, 1)) = 0.01
 		fogSpeed1 ("Fog Speed 1", Float) = 0.1
 		fogSpeed2 ("Fog Speed 2", Float) = 0.2
 
@@ -31,11 +33,9 @@
 			#include "UnityCG.cginc"
 			#include "Flow.cginc"
 
-			uniform sampler2D _MainTex, fogTex1, fogTex2, currentFrameVision;
-			uniform fixed4 fogTex1_ST, fogTex1_TexelSize, fogTex2_ST, fogTex2_TexelSize;
-			uniform fixed fogSpeed1, fogSpeed2;
-
-			uniform sampler2D _FlowMap;
+			uniform sampler2D _MainTex, fogTex1, fogTex2, currentFrameVision, _FlowMap;
+			uniform fixed4 fogTex1_TexelSize, fogTex2_TexelSize;
+			uniform fixed fogScale1, fogScale2, fogSpeed1, fogSpeed2;
 			uniform float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffset;
 
 			struct appdata
@@ -62,7 +62,7 @@
 			{
 
 				// Fog layer 1.
-				fixed2 fog1uv = i.uv * fogTex1_TexelSize.zw * fogTex1_ST.xy;
+				fixed2 fog1uv = i.uv * fogTex1_TexelSize.zw * fogScale1;
 				float3 flow = tex2D(_FlowMap, fog1uv).rgb;
 				flow.xy = flow.xy * 2 - 1;
 				flow *= _FlowStrength;
@@ -76,11 +76,10 @@
 				fixed4 texA = tex2D(fogTex1, uvwA.xy) * uvwA.z;
 				fixed4 texB = tex2D(fogTex1, uvwB.xy) * uvwB.z;
 
-				fixed3 fog1 = (texA.rgb + texB.rgb) * fixed3(1, 0.64, 0.47); // Todo: Cleanup magic number.
-				fog1 = pow(fog1, 4);
+				fixed3 fog1 = (texA.rgb + texB.rgb) * fixed3(0.128, 0.064, 0.064); // Todo: Cleanup magic number.
 
 				// Fog layer 2.
-				fixed2 fog2uv = i.uv * fogTex2_TexelSize.zw * fogTex2_ST.xy;
+				fixed2 fog2uv = i.uv * fogTex2_TexelSize.zw * fogScale2;
 				flow = tex2D(_FlowMap, fog2uv).rgb;
 				flow.xy = flow.xy * 2 - 1;
 				flow *= _FlowStrength;
@@ -94,16 +93,15 @@
 				texA = tex2D(fogTex2, uvwA.xy) * uvwA.z;
 				texB = tex2D(fogTex2, uvwB.xy) * uvwB.z;
 
-				fixed3 fog2 = (texA.rgb + texB.rgb) * fixed3(0.47, 0.84, 1); // Todo: Cleanup magic number.
-				fog2 = pow(fog2, 4);
+				fixed3 fog2 = (texA.rgb + texB.rgb) * fixed3(0.064, 0.128, 0.256); // Todo: Cleanup magic number.
 
 				// Final output.
 				fixed persistentVision = tex2D(_MainTex, i.uv).r;
 				fixed newVision = tex2D(currentFrameVision, i.uv).r;
-				fixed fogDensity = saturate(1 - persistentVision - newVision); // Todo: Cleanup magic number.
 				fixed3 fogColour = fog1 + fog2;
-				fixed avgFogColour = (fogColour.r + fogColour.g + fogColour.b) / 3.0;
-				fogDensity = saturate(fogDensity + avgFogColour*100*fogDensity); // Todo: Cleanup magic number.
+				fixed maxColour = max(max(fogColour.r, fogColour.g), fogColour.b);
+				fixed fogDensity = saturate(1 - persistentVision * (1 - maxColour) - newVision); // 1 - maxColour makes wisps appear in persistent area.
+				fogDensity = saturate(fogDensity + maxColour);
 				return fixed4(fogColour, fogDensity);
 			}
 			ENDCG

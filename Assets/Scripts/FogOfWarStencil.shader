@@ -55,7 +55,7 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed visibility = tex2D(_MainTex, i.uv).r;
-                fixed dither = tex2D(ditherTex, i.uv * _MainTex_TexelSize.zw * ditherTex_TexelSize.zw).r;
+                fixed dither = tex2D(ditherTex, i.uv * 128 * ditherTex_TexelSize.zw).r; // Todo: Remove hard-coded value
                 clip(step(dither, visibility) - 0.5); // Step = 1 when frag visible, 0 otherwise. -0.5 is an arbitrary value to clip non-visible things.
                 return 0;
             }

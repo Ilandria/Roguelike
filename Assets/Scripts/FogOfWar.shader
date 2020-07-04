@@ -3,13 +3,19 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		ditherTex("Dither Texture", 2D) = "white" {}
 		backgroundTex ("Background Texture", 2D) = "black" {}
 	}
 	SubShader
 	{
 		Tags { "RenderType"="Transparent" "Queue"="Transparent" }
 		Cull Off ZWrite Off ZTest Always
-
+		Stencil
+        {
+            Ref 1
+            Comp NotEqual
+            Pass Keep
+		}
 		Pass
 		{
 			Blend SrcAlpha OneMinusSrcAlpha
@@ -35,6 +41,9 @@
 
 			uniform sampler2D _MainTex, backgroundTex;
 			uniform fixed4 backgroundTex_ST;
+			uniform fixed4 _MainTex_TexelSize;
+			uniform sampler2D ditherTex;
+			fixed4 ditherTex_TexelSize;
 
 			v2f vert (appdata v)
 			{
@@ -57,10 +66,13 @@
 				// Todo: Remove the if. This is just here for quick debugging.
 				if (fog.a == 1)
 				{
-					col += background;
+					col += saturate(background - max(max(col.r, col.g), col.b));
 				}
 
-				return fixed4(col, fog.a);
+				fixed dither = tex2D(ditherTex, i.uv * 128 * ditherTex_TexelSize.zw).r; // Todo: Remove magic number.
+                fixed fogDensity = step(dither, pow(fog.a,2)) ;//* fog.a; // Step = 1 when frag visible, 0 otherwise. -0.5 is an arbitrary value to clip non-visible things.
+
+				return fixed4(col, fogDensity);// fixed4(col, fog.a);
 			}
 			ENDCG
 		}
