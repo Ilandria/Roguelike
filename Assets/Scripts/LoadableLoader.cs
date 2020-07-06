@@ -30,6 +30,9 @@ namespace CCB.Roguelike
 		private UnityEventFloat onLoadProgress = null;
 
 		[SerializeField]
+		private UnityEventString onLoadStatus = null;
+
+		[SerializeField]
 		private UnityEvent onLoadComplete = null;
 
 		private Coroutine loadingCoroutine = null;
@@ -43,7 +46,8 @@ namespace CCB.Roguelike
 					{
 						loadProgress = progress;
 						loadStatus = status;
-						onLoadProgress?.Invoke(loadProgress);
+						onLoadProgress?.Invoke(progress);
+						onLoadStatus?.Invoke(status);
 					}));
 			}
 		}

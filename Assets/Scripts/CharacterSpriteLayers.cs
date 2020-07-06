@@ -55,7 +55,7 @@ namespace CCB.Roguelike
 							// This looks a bit ugly but it's just some math to return detailed loading percentage.
 							float outerStep = completedCount / numCollections;
 							float innerStep = sheetLoadCount++ / collection.SpriteSheets.Length / numCollections;
-							progress?.Invoke(outerStep + innerStep, $"{collection.Body} - {collection.Part} - {sheet.Name}");
+							progress?.Invoke(outerStep + innerStep, $"{collection.Body} | {collection.Part} | {sheet.Name}");
 							yield return null;
 
 							if (sheet.TryLoadImage(new FileInfo(jsonFilePath).DirectoryName, sheetDescription.SpriteSheetSize))
