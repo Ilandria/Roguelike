@@ -9,12 +9,6 @@ namespace CCB.Roguelike
 {
 	public class LoadableLoader : MonoBehaviour
 	{
-		private readonly DebugText progressDebugText = new DebugText { Name = "Load Progress", Unit = "%" };
-		private readonly DebugText statusDebugText = new DebugText { Name = "Load Status" };
-
-		[SerializeField]
-		private DebugTextRenderer debugTextRenderer = null;
-
 		[SerializeField]
 		private List<Object> loadables = null;
 
@@ -33,7 +27,7 @@ namespace CCB.Roguelike
 		private UnityEvent onLoadStart = null;
 
 		[SerializeField]
-		private UnityEvent onLoadProgress = null;
+		private UnityEventFloat onLoadProgress = null;
 
 		[SerializeField]
 		private UnityEvent onLoadComplete = null;
@@ -49,14 +43,7 @@ namespace CCB.Roguelike
 					{
 						loadProgress = progress;
 						loadStatus = status;
-
-						if (debugTextRenderer != null)
-						{
-							progressDebugText.Value = string.Format("{0:0.0}", loadProgress * 100.0f);
-							statusDebugText.Value = status;
-						}
-
-						onLoadProgress?.Invoke();
+						onLoadProgress?.Invoke(loadProgress);
 					}));
 			}
 		}
@@ -99,9 +86,6 @@ namespace CCB.Roguelike
 			{
 				StartLoading();
 			}
-
-			debugTextRenderer?.Add(progressDebugText);
-			debugTextRenderer?.Add(statusDebugText);
 		}
 	}
 }

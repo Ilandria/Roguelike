@@ -34,12 +34,13 @@ namespace CCB.Roguelike
 		{
 			if (errorSprite == null)
 			{
+				errorSprite = new CharacterSpriteLayer(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
+
 				float completedCount = 0.0f;
 				progress?.Invoke(0.0f, "Character sprites...");
 
 				string[] jsonFilePaths = Directory.GetFiles(Application.streamingAssetsPath, "CharacterSpriteCollection.json", SearchOption.AllDirectories);
 				int numCollections = jsonFilePaths.Length;
-				errorSprite = new CharacterSpriteLayer(CharacterBodyType.Error, CharacterPartType.Error, "Error", errorTexture);
 				HashSet<CharacterSpriteLayer> componentsSet = new HashSet<CharacterSpriteLayer>();
 				yield return null;
 
