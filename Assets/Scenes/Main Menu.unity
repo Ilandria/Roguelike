@@ -133,6 +133,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 946056722266736450, guid: 68f976b2d9e822e4094633b0c9156e55,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 946056722266736455, guid: 68f976b2d9e822e4094633b0c9156e55,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -254,8 +259,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Exit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f491406e0ed2519419116f1dde748d14, type: 2}
-  m_sharedMaterial: {fileID: -5713494391922727012, guid: f491406e0ed2519419116f1dde748d14,
+  m_fontAsset: {fileID: 11400000, guid: b16889366fca7e54483f8bd542f14ce8, type: 2}
+  m_sharedMaterial: {fileID: 8575332823811231863, guid: b16889366fca7e54483f8bd542f14ce8,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -389,7 +394,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -20}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 55, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &601696691
 MonoBehaviour:
@@ -481,8 +486,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Start
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f491406e0ed2519419116f1dde748d14, type: 2}
-  m_sharedMaterial: {fileID: -5713494391922727012, guid: f491406e0ed2519419116f1dde748d14,
+  m_fontAsset: {fileID: 11400000, guid: b16889366fca7e54483f8bd542f14ce8, type: 2}
+  m_sharedMaterial: {fileID: 8575332823811231863, guid: b16889366fca7e54483f8bd542f14ce8,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -728,8 +733,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Characters
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f491406e0ed2519419116f1dde748d14, type: 2}
-  m_sharedMaterial: {fileID: -5713494391922727012, guid: f491406e0ed2519419116f1dde748d14,
+  m_fontAsset: {fileID: 11400000, guid: b16889366fca7e54483f8bd542f14ce8, type: 2}
+  m_sharedMaterial: {fileID: 8575332823811231863, guid: b16889366fca7e54483f8bd542f14ce8,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -837,12 +842,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1116705243}
   - component: {fileID: 1116705242}
-  m_Layer: 0
-  m_Name: Scene Switcher
+  m_Layer: 31
+  m_Name: Scene Switcher (To Game)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!114 &1116705242
 MonoBehaviour:
@@ -907,7 +912,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -60}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 39, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1223633013
 MonoBehaviour:
@@ -952,7 +957,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1751790494}
+      - m_Target: {fileID: 0}
         m_MethodName: PrepareToJoinRoom
         m_Mode: 1
         m_Arguments:
@@ -1018,7 +1023,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 30, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1428083581
 MonoBehaviour:
@@ -1063,17 +1068,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1751790494}
-        m_MethodName: PrepareToCreateRoom
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1116705242}
         m_MethodName: SwitchScene
         m_Mode: 1
@@ -1130,7 +1124,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -80}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 39, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1469559116
 MonoBehaviour:
@@ -1220,12 +1214,12 @@ GameObject:
   - component: {fileID: 1706083785}
   - component: {fileID: 1706083784}
   - component: {fileID: 1706083783}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!114 &1706083783
 MonoBehaviour:
@@ -1406,7 +1400,7 @@ GameObject:
   - component: {fileID: 1751790493}
   - component: {fileID: 1751790494}
   m_Layer: 31
-  m_Name: Network Coordinator
+  m_Name: Network Mediator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1435,12 +1429,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1751790492}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea5c5e3ebaa4dd64eb08ca9536b5dbd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 341f90dc54439654a90348c9a8f76104, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomName: DON'T HARDCODE THIS
-  connectionInfo: {fileID: 11400000, guid: 38814421d0821f249acb7e0a4f7ea1ba, type: 2}
-  onConnectingToMaster:
+  platformConnector: {fileID: 11400000, guid: 95f532e332977014e9e14958fda97027, type: 2}
+  onJoinedRoom:
+    m_PersistentCalls:
+      m_Calls: []
+  onConnectedToMaster:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1428083581}
@@ -1452,9 +1448,9 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
-  onConnectToMasterSuccess:
+  onAlreadyConnectedToMaster:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1428083581}
@@ -1470,7 +1466,18 @@ MonoBehaviour:
         m_CallState: 2
   onDisconnected:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1428083581}
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1772510148
 GameObject:
   m_ObjectHideFlags: 0
@@ -1531,8 +1538,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f491406e0ed2519419116f1dde748d14, type: 2}
-  m_sharedMaterial: {fileID: -5713494391922727012, guid: f491406e0ed2519419116f1dde748d14,
+  m_fontAsset: {fileID: 11400000, guid: b16889366fca7e54483f8bd542f14ce8, type: 2}
+  m_sharedMaterial: {fileID: 8575332823811231863, guid: b16889366fca7e54483f8bd542f14ce8,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1705,7 +1712,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 41.6, y: 15}
+  m_SizeDelta: {x: 42, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1793388288
 MonoBehaviour:
@@ -1730,8 +1737,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f491406e0ed2519419116f1dde748d14, type: 2}
-  m_sharedMaterial: {fileID: -5713494391922727012, guid: f491406e0ed2519419116f1dde748d14,
+  m_fontAsset: {fileID: 11400000, guid: b16889366fca7e54483f8bd542f14ce8, type: 2}
+  m_sharedMaterial: {fileID: 8575332823811231863, guid: b16889366fca7e54483f8bd542f14ce8,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1936,7 +1943,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 42, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1848461857
 MonoBehaviour:
