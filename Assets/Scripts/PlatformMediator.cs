@@ -2,6 +2,7 @@
 using Steamworks.Data;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -29,6 +30,45 @@ namespace CCB.Roguelike
 		public Image GetAvatar(SteamId steamId) => GetAvatar(() => SteamFriends.GetLargeAvatarAsync(steamId).Result);
 
 		public Image GetAvatar(Friend friend) => GetAvatar(() => friend.GetLargeAvatarAsync().Result);
+
+		//public Lobby? Lobby { get; private set; }
+
+		/*public Lobby? CreateLobby()
+		{
+			Task<Lobby?> lobbyTask = SteamMatchmaking.CreateLobbyAsync(4);
+			lobbyTask.Wait();
+
+			if (lobbyTask.Result.HasValue)
+			{
+				Lobby = lobbyTask.Result.Value;
+				Lobby.Value.SetPrivate();
+				Lobby.Value.SetJoinable(true);
+			}
+			else
+			{
+				Lobby = null;
+			}
+
+			return Lobby;
+		}*/
+
+		private void OnEnable()
+		{
+			SteamUtils.OnSteamShutdown += OnSteamShutdown;
+		}
+
+		private void OnDisable()
+		{
+			SteamUtils.OnSteamShutdown -= OnSteamShutdown;
+		}
+
+		private void OnSteamShutdown()
+		{
+			/*if (Lobby.HasValue)
+			{
+				Lobby.Value.Leave();
+			}*/
+		}
 
 		private Image GetAvatar(Func<Image?> predicate)
 		{

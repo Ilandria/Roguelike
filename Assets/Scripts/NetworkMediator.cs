@@ -1,5 +1,7 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
+using Steamworks;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -29,8 +31,14 @@ namespace CCB.Roguelike
 		{
 			if (PhotonNetwork.IsConnected && !PhotonNetwork.InRoom)
 			{
+				// Todo: Probably need to move this stuff out to another class...
+				/*if (platformMediator.CreateLobby().HasValue)
+				{
+					Debug.Log("Created steam lobby");
+				}*/
+
 				// Todo: Passwords, friends only, single player, etc.
-				PhotonNetwork.CreateRoom(PhotonNetwork.NickName);
+				PhotonNetwork.CreateRoom(Guid.NewGuid().ToString());
 			}
 		}
 
