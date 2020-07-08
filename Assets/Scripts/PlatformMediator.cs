@@ -12,8 +12,7 @@ namespace CCB.Roguelike
 	/// It is impossible to be in-game and not connected to the platform (Steam, currently).
 	/// The game will exit if Steam is not running, there is no need to check connectivity anywhere.
 	/// </summary>
-	[CreateAssetMenu(fileName = "New Platform Connector", menuName = "CCB/Data/Platform Connector")]
-	public class PlatformConnector : ScriptableObject
+	public class PlatformMediator : MonoBehaviour
 	{
 		public SteamId Id => SteamClient.SteamId;
 

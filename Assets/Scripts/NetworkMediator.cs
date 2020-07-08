@@ -8,7 +8,7 @@ namespace CCB.Roguelike
 	public class NetworkMediator : MonoBehaviourPunCallbacks
 	{
 		[SerializeField]
-		private PlatformConnector platformConnector = null;
+		private PlatformMediator platformMediator = null;
 
 		[SerializeField]
 		private UnityEvent onJoinedRoom = null;
@@ -63,7 +63,7 @@ namespace CCB.Roguelike
 		{
 			if (!PhotonNetwork.IsConnected)
 			{
-				PhotonNetwork.NickName = platformConnector.Name;
+				PhotonNetwork.NickName = platformMediator.Name;
 				PhotonNetwork.AutomaticallySyncScene = false;
 				PhotonNetwork.GameVersion = Application.version;
 				PhotonNetwork.ConnectUsingSettings();
