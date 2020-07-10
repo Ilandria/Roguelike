@@ -4,6 +4,7 @@
 	"SpriteSheets":
 	[
 		{
+			"Id":0,
 			"Name":"Default",
 			"FileName":"Default.png"
 		}

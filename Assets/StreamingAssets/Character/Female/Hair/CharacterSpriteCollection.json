@@ -4,126 +4,157 @@
 	"SpriteSheets":
 	[
 		{
+			"Id":0,
 			"Name":"Bald",
 			"FileName":"bald.png"
 		},
 		{
+			"Id":1,
 			"Name":"Bangs",
 			"FileName":"bangs.png"
 		},
 		{
+			"Id":2,
 			"Name":"Long Bangs",
 			"FileName":"bangslong.png"
 		},
 		{
+			"Id":3,
 			"Name":"Long Bangs 2",
 			"FileName":"bangslong2.png"
 		},
 		{
+			"Id":4,
 			"Name":"Short Bangs",
 			"FileName":"bangsshort.png"
 		},
 		{
+			"Id":5,
 			"Name":"Extra Long",
 			"FileName":"xlong.png"
 		},
 		{
+			"Id":6,
 			"Name":"Bed Head",
 			"FileName":"bedhead.png"
 		},
 		{
+			"Id":7,
 			"Name":"Bunches",
 			"FileName":"bunches.png"
 		},
 		{
+			"Id":8,
 			"Name":"Aphro",
 			"FileName":"jewfro.png"
 		},
 		{
+			"Id":9,
 			"Name":"Long",
 			"FileName":"long.png"
 		},
 		{
+			"Id":10,
 			"Name":"Long Hawk",
 			"FileName":"longhawk.png"
 		},
 		{
+			"Id":11,
 			"Name":"Short Hawk",
 			"FileName":"shorthawk.png"
 		},
 		{
+			"Id":12,
 			"Name":"Long Knotted",
 			"FileName":"longknot.png"
 		},
 		{
+			"Id":13,
 			"Name":"Short Knotted",
 			"FileName":"shortknot.png"
 		},
 		{
+			"Id":14,
 			"Name":"Very Long Knotted",
 			"FileName":"xlongknot.png"
 		},
 		{
+			"Id":15,
 			"Name":"Loose",
 			"FileName":"loose.png"
 		},
 		{
+			"Id":16,
 			"Name":"Messy",
 			"FileName":"messy1.png"
 		},
 		{
+			"Id":17,
 			"Name":"Messy 2",
 			"FileName":"messy2.png"
 		},
 		{
+			"Id":18,
 			"Name":"Mohawk",
 			"FileName":"mohawk.png"
 		},
 		{
+			"Id":19,
 			"Name":"Page",
 			"FileName":"page.png"
 		},
 		{
+			"Id":20,
 			"Name":"Page 2",
 			"FileName":"page2.png"
 		},
 		{
+			"Id":21,
 			"Name":"Parted",
 			"FileName":"parted.png"
 		},
 		{
+			"Id":22,
 			"Name":"Pixie Cut",
 			"FileName":"pixie.png"
 		},
 		{
+			"Id":23,
 			"Name":"Plain",
 			"FileName":"plain.png"
 		},
 		{
+			"Id":24,
 			"Name":"Ponytail",
 			"FileName":"ponytail.png"
 		},
 		{
+			"Id":25,
 			"Name":"Ponytail 2",
 			"FileName":"ponytail2.png"
 		},
 		{
+			"Id":26,
 			"Name":"Princess",
 			"FileName":"princess.png"
 		},
 		{
+			"Id":27,
 			"Name":"Left Shoulder",
 			"FileName":"shoulderl.png"
 		},
 		{
+			"Id":28,
 			"Name":"Right Shoulder",
 			"FileName":"shoulderr.png"
 		},
 		{
+			"Id":29,
 			"Name":"Swoop",
 			"FileName":"swoop.png"
 		},
 		{
+			"Id":30,
 			"Name":"Unkempt",
 			"FileName":"unkempt.png"
 		}

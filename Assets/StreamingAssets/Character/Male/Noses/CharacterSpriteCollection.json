@@ -4,18 +4,22 @@
 	"SpriteSheets":
 	[
 		{
+			"Id":0,
 			"Name":"None",
 			"FileName":"None.png"
 		},
 		{
+			"Id":1,
 			"Name":"Big",
 			"FileName":"Big.png"
 		},
 		{
+			"Id":2,
 			"Name":"Button",
 			"FileName":"Button.png"
 		},
 		{
+			"Id":3,
 			"Name":"Straight",
 			"FileName":"Straight.png"
 		}

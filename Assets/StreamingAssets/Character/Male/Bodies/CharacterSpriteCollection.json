@@ -4,18 +4,22 @@
 	"SpriteSheets":
 	[
 		{
+			"Id":0,
 			"Name":"Elf",
 			"FileName":"Elf.png"
 		},
 		{
+			"Id":1,
 			"Name":"Human",
 			"FileName":"Human.png"
 		},
 		{
+			"Id":2,
 			"Name":"Orc",
 			"FileName":"Orc.png"
 		},
 		{
+			"Id":3,
 			"Name":"Skeleton",
 			"FileName":"Skeleton.png"
 		}
