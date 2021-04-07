@@ -51,11 +51,12 @@ Material:
         m_Texture: {fileID: 2800000, guid: 5d6f24166b2471042820a6f7d6aac3e5, type: 3}
         m_Scale: {x: 0.01, y: 0.01}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _FlowOffset: -0.5
-    - _FlowStrength: 0.3
-    - _Speed: 0.1
-    - _Tiling: 2
+    - _FlowStrength: 0.25
+    - _Speed: 0.025
+    - _Tiling: 2.5
     - _UJump: 0.25
     - _VJump: 0.25
     - fogScale1: 0.007
@@ -65,3 +66,4 @@ Material:
     - maxFogBrightness: 1
     - minFogBrightness: 0
     m_Colors: []
+  m_BuildTextureStacks: []

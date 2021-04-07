@@ -64,13 +64,13 @@
 				fixed3 col = fog.rgb;
 
 				// Todo: Remove the if. This is just here for quick debugging.
-				if (fog.a == 1)
-				{
+				//if (fog.a == 1)
+				//{
 					col += saturate(background - max(max(col.r, col.g), col.b));
-				}
+				//}
 
 				fixed dither = tex2D(ditherTex, i.uv * 128 * ditherTex_TexelSize.zw).r; // Todo: Remove magic number.
-                fixed fogDensity = step(dither, pow(fog.a,2)) ;//* fog.a; // Step = 1 when frag visible, 0 otherwise. -0.5 is an arbitrary value to clip non-visible things.
+				fixed fogDensity = step(dither, fog.a) ;//* fog.a; // Step = 1 when frag visible, 0 otherwise. -0.5 is an arbitrary value to clip non-visible things.
 
 				return fixed4(col, fogDensity);// fixed4(col, fog.a);
 			}

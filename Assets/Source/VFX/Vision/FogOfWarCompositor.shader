@@ -60,7 +60,6 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-
 				// Fog layer 1.
 				fixed2 fog1uv = i.uv * fogTex1_TexelSize.zw * fogScale1;
 				float3 flow = tex2D(_FlowMap, fog1uv).rgb;
@@ -100,7 +99,7 @@
 				fixed newVision = tex2D(currentFrameVision, i.uv).r;
 				fixed3 fogColour = fog1 + fog2;
 				fixed maxColour = max(max(fogColour.r, fogColour.g), fogColour.b);
-				fixed fogDensity = saturate(1 - persistentVision * (1 - maxColour) - newVision); // 1 - maxColour makes wisps appear in persistent area.
+				fixed fogDensity = saturate(1 - persistentVision * (1 - maxColour) - newVision);//saturate(1 - persistentVision * (1 - maxColour) - newVision); // 1 - maxColour makes wisps appear in persistent area.
 				fogDensity = saturate(fogDensity + maxColour);
 				return fixed4(fogColour, fogDensity);
 			}
