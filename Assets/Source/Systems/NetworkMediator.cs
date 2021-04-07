@@ -1,6 +1,5 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
-using Steamworks;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,9 +8,6 @@ namespace CCB.Roguelike
 {
 	public class NetworkMediator : MonoBehaviourPunCallbacks
 	{
-		[SerializeField]
-		private PlatformMediator platformMediator = null;
-
 		[SerializeField]
 		private UnityEvent onJoinedRoom = null;
 
@@ -71,12 +67,12 @@ namespace CCB.Roguelike
 		{
 			if (!PhotonNetwork.IsConnected)
 			{
-				PhotonNetwork.NickName = platformMediator.Name;
+				// Todo: Actual player name...
+				PhotonNetwork.NickName = $"Player {Guid.NewGuid()}";
 				PhotonNetwork.AutomaticallySyncScene = false;
 				PhotonNetwork.GameVersion = Application.version;
 				PhotonNetwork.ConnectUsingSettings();
-				// Todo: Allow for offline play using PhotonNetwork.OfflineMode = true? Player must be online
-				// on the platform (Steam) though so this may not make sense.
+				// Todo: Allow for offline play using PhotonNetwork.OfflineMode = true?
 			}
 			else
 			{
