@@ -53,12 +53,10 @@
 
 			float3 uvwA = FlowUVW(
 				IN.uv_MainTex, flow.xy, jump,
-				_FlowOffset, _Tiling, time, false
-			);
+				_FlowOffset, _Tiling, time);
 			float3 uvwB = FlowUVW(
 				IN.uv_MainTex, flow.xy, jump,
-				_FlowOffset, _Tiling, time, true
-			);
+				_FlowOffset+0.5, _Tiling, time);
 
 			float finalHeightScale =
 				flow.z * _HeightScaleModulated + _HeightScale;

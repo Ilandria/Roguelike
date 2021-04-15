@@ -54,13 +54,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _FlowOffset: -0.5
-    - _FlowStrength: 0.25
-    - _Speed: 0.025
-    - _Tiling: 2.5
+    - _FlowStrength: 1
+    - _Speed: 0.005
+    - _Tiling: 2
     - _UJump: 0.25
     - _VJump: 0.25
     - fogScale1: 0.007
-    - fogScale2: 0.006
+    - fogScale2: 0.005
     - fogSpeed1: 0.125
     - fogSpeed2: 0.1
     - maxFogBrightness: 1

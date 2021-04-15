@@ -69,13 +69,11 @@
 				float time = _Time.y * _Speed + noise;
 				float2 jump = float2(_UJump, _VJump);
 
-				float3 uvwA = FlowUVW(fog1uv, flow.xy, jump, _FlowOffset, _Tiling, time, false);
-				float3 uvwB = FlowUVW(fog1uv, flow.xy, jump, _FlowOffset, _Tiling, time, true);
+				float3 uvw = FlowUVW(fog1uv, flow.xy, jump, _FlowOffset, _Tiling, time);
+				fixed4 tex = tex2D(fogTex1, uvw.xy) * uvw.z;
 
-				fixed4 texA = tex2D(fogTex1, uvwA.xy) * uvwA.z;
-				fixed4 texB = tex2D(fogTex1, uvwB.xy) * uvwB.z;
-
-				fixed3 fog1 = (texA.rgb + texB.rgb) * fixed3(0.128, 0.064, 0.064); // Todo: Cleanup magic number.
+				// Todo: Cleanup magic number.
+				fixed3 fog1 = tex.rgb * fixed3(0.192, 0.128, 0.192);
 
 				// Fog layer 2.
 				fixed2 fog2uv = i.uv * fogTex2_TexelSize.zw * fogScale2;
@@ -86,20 +84,18 @@
 				time = _Time.y * _Speed + noise;
 				jump = float2(_UJump, _VJump);
 
-				uvwA = FlowUVW(fog2uv, flow.xy, jump, _FlowOffset, _Tiling, time, false);
-				uvwB = FlowUVW(fog2uv, flow.xy, jump, _FlowOffset, _Tiling, time, true);
+				uvw = FlowUVW(fog2uv, flow.xy, jump, _FlowOffset, _Tiling, time);
+				tex = tex2D(fogTex2, uvw.xy) * uvw.z;
 
-				texA = tex2D(fogTex2, uvwA.xy) * uvwA.z;
-				texB = tex2D(fogTex2, uvwB.xy) * uvwB.z;
-
-				fixed3 fog2 = (texA.rgb + texB.rgb) * fixed3(0.064, 0.128, 0.256); // Todo: Cleanup magic number.
+				// Todo: Cleanup magic number.
+				fixed3 fog2 = tex.rgb * fixed3(0.256, 0.384, 0.384);
 
 				// Final output.
 				fixed persistentVision = tex2D(_MainTex, i.uv).r;
 				fixed newVision = tex2D(currentFrameVision, i.uv).r;
 				fixed3 fogColour = fog1 + fog2;
 				fixed maxColour = max(max(fogColour.r, fogColour.g), fogColour.b);
-				fixed fogDensity = saturate(1 - persistentVision * (1 - maxColour) - newVision);//saturate(1 - persistentVision * (1 - maxColour) - newVision); // 1 - maxColour makes wisps appear in persistent area.
+				fixed fogDensity = saturate(1 - persistentVision * (1 - maxColour) - newVision); // 1 - maxColour makes wisps appear in persistent area.
 				fogDensity = saturate(fogDensity + maxColour);
 				return fixed4(fogColour, fogDensity);
 			}
