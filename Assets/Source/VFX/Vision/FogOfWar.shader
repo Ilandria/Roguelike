@@ -5,6 +5,9 @@
 		_MainTex ("Texture", 2D) = "white" {}
 		ditherTex("Dither Texture", 2D) = "white" {}
 		backgroundTex ("Background Texture", 2D) = "black" {}
+		fogScale ("Fog Scale", Float) = 16
+		visionTexWidth ("Vision Tex Width", Float) = 128
+		visionWidthFogScaleRatio ("Vision Fog Size Ratio", Float) = 8
 	}
 	SubShader
 	{
@@ -42,6 +45,9 @@
 			uniform sampler2D _MainTex, backgroundTex;
 			uniform fixed4 backgroundTex_ST;
 			uniform fixed4 _MainTex_TexelSize;
+			uniform float fogScale;
+			uniform float visionTexWidth;
+			uniform float visionWidthFogScaleRatio;
 			uniform sampler2D ditherTex;
 			fixed4 ditherTex_TexelSize;
 
@@ -54,16 +60,17 @@
 				return o;
 			}
 
-			fixed4 frag (v2f i) : SV_Target
+			fixed4 frag(v2f i) : SV_Target
 			{
-				fixed4 fog = tex2D(_MainTex, i.uv);
+				float2 uv = ((i.uv + _WorldSpaceCameraPos.xy / fogScale) - 0.5) / visionWidthFogScaleRatio + 0.5;
+				fixed4 fog = tex2D(_MainTex, uv);
 				fixed2 backUV = i.screenPos.xy / i.screenPos.w;
 				backUV.x = backUV.x * (_ScreenParams.x / _ScreenParams.y);
 				fixed3 background = tex2D(backgroundTex, backUV).rgb;
 
 				fixed3 col = fog.rgb;
 				col += saturate(background - max(max(col.r, col.g), col.b));
-				fixed dither = tex2D(ditherTex, i.uv * 128 * ditherTex_TexelSize.zw).r; // Todo: Remove magic number.
+				fixed dither = tex2D(ditherTex, uv * visionTexWidth * ditherTex_TexelSize.zw).r;
 				fixed fogDensity = step(dither, fog.a);
 
 				return fixed4(col, fogDensity);

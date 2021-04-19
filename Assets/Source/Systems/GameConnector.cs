@@ -10,7 +10,7 @@ namespace CCB.Roguelike
 		public void ConnectToGame()
 		{
 			networkMediator.CreateGame();
-			// Todo: Join game, reconnect to game, etc. May need to great a game state object.
+			// Todo: Join game, reconnect to game, etc. May need to create a game state object.
 		}
 	}
 }

@@ -14,11 +14,22 @@ namespace CCB.Roguelike
 		private RenderTexture fogOfWarTex = null;
 
 		[SerializeField]
-		private Material fogOfWarMat = null;
+		private Material fogOfWarCompositor = null;
+
+		[SerializeField]
+		private Material fogMaterial = null;
+
+		private int visionTexWidthId = -1;
+		private int fogScaleId = -1;
+		private int visionWidthFogScaleRatioId = -1;
 
 		private void Start()
 		{
 			FillFog();
+
+			fogScaleId = Shader.PropertyToID("fogScale"); ;
+			visionTexWidthId = Shader.PropertyToID("visionTexWidth");
+			visionWidthFogScaleRatioId = Shader.PropertyToID("visionWidthFogScaleRatio");
 		}
 
 		public void FillFog()
@@ -44,8 +55,13 @@ namespace CCB.Roguelike
 		// This technically means FoW is delayed by a frame... but that's fine.
 		private void LateUpdate()
 		{
-			fogOfWarMat.SetPass(0);
-			Graphics.Blit(persistentVisionTex, fogOfWarTex, fogOfWarMat);
+			// Todo: Only update these if they've changed.
+			fogMaterial.SetFloat(fogScaleId, transform.localScale.x);
+			fogMaterial.SetFloat(visionTexWidthId, persistentVisionTex.width);
+			fogMaterial.SetFloat(visionWidthFogScaleRatioId, persistentVisionTex.width / transform.localScale.x);
+
+			fogOfWarCompositor.SetPass(0);
+			Graphics.Blit(persistentVisionTex, fogOfWarTex, fogOfWarCompositor);
 
 			persistentVisionMat.SetPass(0);
 			Graphics.Blit(persistentVisionTex, persistentVisionTex, persistentVisionMat);
