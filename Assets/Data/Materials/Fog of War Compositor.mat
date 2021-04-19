@@ -54,8 +54,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _FlowOffset: -0.5
-    - _FlowStrength: 1
-    - _Speed: 0.005
+    - _FlowStrength: 0.3
+    - _Speed: 0.01
     - _Tiling: 2
     - _UJump: 0.25
     - _VJump: 0.25

@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.unity.2d.pixel-perfect": {
-      "version": "4.0.1",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -132,7 +125,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.5.2",
+      "version": "1.5.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
