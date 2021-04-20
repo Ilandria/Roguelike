@@ -2,28 +2,29 @@
 {
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "white" {}
-		ditherTex("Dither Texture", 2D) = "white" {}
-		backgroundTex ("Background Texture", 2D) = "black" {}
+		_MainTex ("Texture", 2D) = "white" { }
+		ditherTex ("Dither Texture", 2D) = "white" { }
+		backgroundTex ("Background Texture", 2D) = "black" { }
 		fogScale ("Fog Scale", Float) = 16
 		visionTexWidth ("Vision Tex Width", Float) = 128
 		visionWidthFogScaleRatio ("Vision Fog Size Ratio", Float) = 8
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Transparent" "Queue"="Transparent" }
+		Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
 		Cull Off ZWrite Off ZTest Always
 		Stencil
-        {
-            Ref 1
-            Comp NotEqual
-            Pass Keep
+		{
+			Ref 1
+			Comp NotEqual
+			Pass Keep
 		}
 		Pass
 		{
 			Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -51,7 +52,7 @@
 			uniform sampler2D ditherTex;
 			fixed4 ditherTex_TexelSize;
 
-			v2f vert (appdata v)
+			v2f vert(appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
@@ -76,6 +77,7 @@
 				return fixed4(col, fogDensity);
 			}
 			ENDCG
+
 		}
 	}
 }

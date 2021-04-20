@@ -2,17 +2,17 @@
 {
 	Properties
 	{
-		_MainTex ("Persistent Vision", 2D) = "white" {}
-		currentFrameVision("New Vision", 2D) = "white" {}
+		_MainTex ("Persistent Vision", 2D) = "white" { }
+		currentFrameVision ("New Vision", 2D) = "white" { }
 
-		[NoScaleOffset] fogTex1 ("Fog Texture 1", 2D) = "black" {}
-		[NoScaleOffset] fogTex2 ("Fog Texture 2", 2D) = "black" {}
+		[NoScaleOffset] fogTex1 ("Fog Texture 1", 2D) = "black" { }
+		[NoScaleOffset] fogTex2 ("Fog Texture 2", 2D) = "black" { }
 		[PowerSlider(10.0)] fogScale1 ("Fog Scale 1", Range(0.001, 1)) = 0.03
 		[PowerSlider(10.0)] fogScale2 ("Fog Scale 2", Range(0.001, 1)) = 0.01
 		fogSpeed1 ("Fog Speed 1", Float) = 0.1
 		fogSpeed2 ("Fog Speed 2", Float) = 0.2
 
-		[NoScaleOffset] _FlowMap ("Flow (RG, A noise)", 2D) = "black" {}
+		[NoScaleOffset] _FlowMap ("Flow (RG, A noise)", 2D) = "black" { }
 		_UJump ("U jump per phase", Range(-0.25, 0.25)) = 0.25
 		_VJump ("V jump per phase", Range(-0.25, 0.25)) = 0.25
 		_Tiling ("Tiling", Float) = 1
@@ -27,6 +27,7 @@
 		Pass
 		{
 			CGPROGRAM
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -50,7 +51,7 @@
 				float4 vertex : SV_POSITION;
 			};
 
-			v2f vert (appdata v)
+			v2f vert(appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
@@ -58,7 +59,7 @@
 				return o;
 			}
 
-			fixed4 frag (v2f i) : SV_Target
+			fixed4 frag(v2f i) : SV_Target
 			{
 				// Fog layer 1.
 				fixed2 fog1uv = i.uv * fogTex1_TexelSize.zw * fogScale1;
@@ -100,6 +101,7 @@
 				return fixed4(fogColour, fogDensity);
 			}
 			ENDCG
+
 		}
 	}
 }
