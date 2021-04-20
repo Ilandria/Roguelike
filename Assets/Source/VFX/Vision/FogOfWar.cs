@@ -11,33 +11,25 @@ namespace CCB.Roguelike
 		private Material persistentVisionMat = null;
 
 		[SerializeField]
-		private RenderTexture fogOfWarTex = null;
-
-		[SerializeField]
-		private Material fogOfWarCompositor = null;
-
-		[SerializeField]
 		private Material fogMaterial = null;
 
-		private int visionTexWidthId = -1;
-		private int fogScaleId = -1;
-		private int visionWidthFogScaleRatioId = -1;
+		private int stencilQuadScaleId = -1;
+		private int fogQuadScaleId = -1;
+		private int stencilFogScaleRatioId = -1;
 
 		private void Start()
 		{
 			FillFog();
 
-			fogScaleId = Shader.PropertyToID("fogScale"); ;
-			visionTexWidthId = Shader.PropertyToID("visionTexWidth");
-			visionWidthFogScaleRatioId = Shader.PropertyToID("visionWidthFogScaleRatio");
+			fogQuadScaleId = Shader.PropertyToID("fogQuadScale"); ;
+			stencilQuadScaleId = Shader.PropertyToID("stencilQuadScale");
+			stencilFogScaleRatioId = Shader.PropertyToID("stencilFogScaleRatio");
 		}
 
 		public void FillFog()
 		{
 			RenderTexture previousTexture = RenderTexture.active;
 			RenderTexture.active = persistentVisionTex;
-			GL.Clear(true, true, Color.black);
-			RenderTexture.active = fogOfWarTex;
 			GL.Clear(true, true, Color.black);
 			RenderTexture.active = previousTexture;
 		}
@@ -47,8 +39,6 @@ namespace CCB.Roguelike
 			RenderTexture previousTexture = RenderTexture.active;
 			RenderTexture.active = persistentVisionTex;
 			GL.Clear(true, true, Color.white);
-			RenderTexture.active = fogOfWarTex;
-			GL.Clear(true, true, Color.clear);
 			RenderTexture.active = previousTexture;
 		}
 
@@ -56,12 +46,10 @@ namespace CCB.Roguelike
 		private void LateUpdate()
 		{
 			// Todo: Only update these if they've changed.
-			fogMaterial.SetFloat(fogScaleId, transform.localScale.x);
-			fogMaterial.SetFloat(visionTexWidthId, persistentVisionTex.width);
-			fogMaterial.SetFloat(visionWidthFogScaleRatioId, persistentVisionTex.width / transform.localScale.x);
-
-			fogOfWarCompositor.SetPass(0);
-			Graphics.Blit(persistentVisionTex, fogOfWarTex, fogOfWarCompositor);
+			// Todo: Make the vision stencil camera/object local to the player.
+			fogMaterial.SetFloat(fogQuadScaleId, transform.localScale.x);
+			fogMaterial.SetFloat(stencilQuadScaleId, 256);
+			fogMaterial.SetFloat(stencilFogScaleRatioId, 256 / transform.localScale.x);
 
 			persistentVisionMat.SetPass(0);
 			Graphics.Blit(persistentVisionTex, persistentVisionTex, persistentVisionMat);

@@ -28,11 +28,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 8400000, guid: acee1023ebfebfd4f92b2ec2f41747a3, type: 2}
+        m_Texture: {fileID: 8400000, guid: 73cf130e26f80b0498b9ad4e49d99ea7, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - backgroundTex:
         m_Texture: {fileID: 2800000, guid: 34a432d9db72d8a4e8c74962562111aa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - currentFrameVision:
+        m_Texture: {fileID: 8400000, guid: e24abc4c3dbd7b84f833fe27f996256e, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - currentFrameVisionTex:
+        m_Texture: {fileID: 8400000, guid: e24abc4c3dbd7b84f833fe27f996256e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - ditherTex:
@@ -49,20 +57,25 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FlowOffset: 0
-    - _FlowStrength: 0.05
+    - _FlowOffset: -0.025
+    - _FlowStrength: 0.025
     - _HeightScale: 0.25
     - _HeightScaleModulated: 0.75
-    - _Speed: 0.33
-    - _Tiling: 2
+    - _Speed: 0.05
+    - _Tiling: 1
     - _UJump: 0.25
     - _VJump: 0.25
+    - fogQuadScale: 16
     - fogScale: 16
+    - fogScale1: 0.004
+    - fogScale2: 0.002
     - fogSpeed: 0.2
     - fogSpeed1: 0.125
     - fogSpeed2: 0.1
     - maxFogBrightness: 0.2
     - minFogBrightness: 0.02
+    - stencilFogScaleRatio: 16
+    - stencilQuadScale: 256
     - visionTexWidth: 256
     - visionWidthFogScaleRatio: 16
     m_Colors: []
