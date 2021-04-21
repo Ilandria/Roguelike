@@ -3,7 +3,6 @@
     Properties
     {
         _MainTex("Current Frame Vision", 2D) = "white" {}
-        ditherTex("Dither", 2D) = "white" {}
     }
     SubShader
     {
@@ -56,8 +55,7 @@
             {
                 // Todo: Make Current Frame Vision texture local to the player instead of global.
                 fixed visibility = tex2D(_MainTex, i.uv).r;
-                fixed dither = tex2D(ditherTex, i.uv * 256 * ditherTex_TexelSize.zw).r; // Todo: Remove hard-coded value
-                //clip(step(dither, visibility) - 0.5); // Step = 1 when frag visible, 0 otherwise. -0.5 is an arbitrary value to clip non-visible things.
+                // Step = 1 when frag visible, 0 otherwise. -0.5 is an arbitrary value to clip non-visible things.
                 clip(visibility - 0.1);
                 return 0;
             }

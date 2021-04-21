@@ -115,8 +115,8 @@
 				fogColour += tex.rgb * fixed3(0.256, 0.384, 0.384);
 
 				fixed3 col = fogColour.rgb;
-				fixed fogDensity = saturate(1 - persistentVision + (col.r + col.g + col.b)*2.5);
-				col += backgroundColour;// saturate(backgroundColour - max(max(col.r, col.g), col.b));
+				fixed fogDensity = saturate(1 - persistentVision + (col.r + col.g + col.b));
+				col += backgroundColour;
 				return fixed4(col, fogDensity);
 			}
 			ENDCG
