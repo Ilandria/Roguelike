@@ -21,8 +21,6 @@
 
 		backgroundTex ("Background Texture", 2D) = "black" { }
 		fogQuadScale ("Fog Quad Scale", Float) = 16
-		stencilQuadScale ("Stencil Quad Scale", Float) = 256
-		stencilFogScaleRatio ("Stencil Fog Scale Ratio", Float) = 16
 	}
 	SubShader
 	{
@@ -63,7 +61,7 @@
 			uniform fixed4 fogTex1_TexelSize, fogTex2_TexelSize, backgroundTex_ST;
 			uniform fixed fogScale1, fogScale2, fogSpeed1, fogSpeed2;
 			uniform float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffset;
-			uniform float fogQuadScale, stencilQuadScale, stencilFogScaleRatio;
+			uniform float fogQuadScale;
 
 			v2f vert(appdata v)
 			{
@@ -76,7 +74,8 @@
 
 			fixed4 frag(v2f i) : SV_Target
 			{
-				float2 uv = ((i.uv + _WorldSpaceCameraPos.xy / fogQuadScale) - 0.5) / stencilFogScaleRatio + 0.5;
+				// Todo: Get vision textures to the correct size and to line up.
+				float2 uv = i.uv + _WorldSpaceCameraPos.xy / 8;// fogQuadScale
 
 				fixed persistentVision = tex2D(_MainTex, uv).r;
 

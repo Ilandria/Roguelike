@@ -39,9 +39,7 @@
             };
 
             uniform sampler2D _MainTex;
-            uniform sampler2D ditherTex;
             fixed4 _MainTex_TexelSize;
-            fixed4 ditherTex_TexelSize;
 
             v2f vert (appdata v)
             {

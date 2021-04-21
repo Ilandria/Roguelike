@@ -39,11 +39,14 @@
 
             uniform sampler2D _MainTex;
             uniform sampler2D currentFrameVision;
+            uniform float fogQuadScale;
 
             fixed4 frag (v2f i) : SV_Target
             {
+                // Todo: Get vision textures to the correct size and to line up.
+                float2 uv = i.uv - _WorldSpaceCameraPos.xy / fogQuadScale;
                 fixed persistentVision = tex2D(_MainTex, i.uv).r;
-                fixed newVision = tex2D(currentFrameVision, i.uv).r;
+                fixed newVision = tex2D(currentFrameVision, uv).r;
                 return fixed4(max(persistentVision, newVision), 0, 0, 0);
             }
             ENDCG
