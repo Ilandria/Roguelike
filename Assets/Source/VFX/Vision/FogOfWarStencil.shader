@@ -51,10 +51,9 @@
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // Todo: Make Current Frame Vision texture local to the player instead of global.
                 fixed visibility = tex2D(_MainTex, i.uv).r;
                 // Step = 1 when frag visible, 0 otherwise. -0.5 is an arbitrary value to clip non-visible things.
-                clip(visibility - 0.1);
+                clip(visibility - 0.5);
                 return 0;
             }
 

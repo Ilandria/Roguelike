@@ -18,16 +18,18 @@ uint worldSize;
 [numthreads(THREAD_COUNT,THREAD_COUNT,1)]
 void AddCurrentFrameVision (uint3 threadId : SV_DispatchThreadID)
 {
+    int3 targetUv = int3(0, 0, 0);
+
     // Todo: Better interpolation/higher resolution - fog looks like crap atm.
-    int2 targetUv = (int2)((threadId.xy / (float)THREAD_COUNT) * currentFrameVisionTexSize);
-    float currentFrameVision = (float)currentFrameVisionTex.Load(int3(targetUv, 0)).r;
+    targetUv.xy = (int2)((threadId.xy / (float)THREAD_COUNT) * currentFrameVisionTexSize);
+    float currentFrameVision = currentFrameVisionTex.Load(targetUv).r;
 
     float2 centerUv = worldSpaceCamPos / worldSize + 0.5f;
     float2 fogQuadUvWidth = fogQuadScale / worldSize;
     float2 bottomLeftUv = centerUv - fogQuadUvWidth / 2.0f;
     float2 uvIncrement = fogQuadUvWidth / THREAD_COUNT;
-    targetUv = (int2)((bottomLeftUv + uvIncrement * threadId.xy) * persistentVisionTexSize);
-    float persistentVision = (float)persistentVisionTex.Load(int3(targetUv, 0)).r;
+    targetUv.xy = (int2)((bottomLeftUv + uvIncrement * threadId.xy) * persistentVisionTexSize);
+    float persistentVision = persistentVisionTex.Load(targetUv.xy).r;
 
-    persistentVisionTex[targetUv] = float4(max(persistentVision, currentFrameVision), 0, 0, 0);
+    persistentVisionTex[targetUv.xy] = float4(max(persistentVision, currentFrameVision), 0, 0, 0);
 }
