@@ -58,11 +58,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _FlowOffset: -0.025
-    - _FlowStrength: 0.025
+    - _FlowStrength: 0.02
     - _HeightScale: 0.25
     - _HeightScaleModulated: 0.75
-    - _Speed: 0.05
-    - _Tiling: 1
+    - _Speed: 0.02
+    - _Tiling: 0.5
     - _UJump: 0.25
     - _VJump: 0.25
     - fogQuadScale: 16

@@ -7,8 +7,6 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private Transform playerCameraTransform = null;
 
-		[SerializeField]
-		private RenderTexture persistentVisionTex = null;
 
 		[SerializeField]
 		private RenderTexture currentFrameVisionTex = null;
@@ -18,6 +16,17 @@ namespace CCB.Roguelike
 
 		[SerializeField]
 		private Material fogMaterial = null;
+
+		// Todo: Move this somewhere more appropriate.
+		// Multiple of 16 is due to compute shader thread group size.
+		[SerializeField]
+		[Tooltip("This must be a multiple of 16.")]
+		private int worldSize = 256;
+
+		[SerializeField]
+		[Tooltip("Number of fog samples per world unit.")]
+		[Range(1, 32)]
+		private int fogDetailLevel = 2;
 
 		private int fogQuadScaleId = -1;
 		private int currentFrameVisionTexId = -1;
@@ -29,15 +38,19 @@ namespace CCB.Roguelike
 
 		private int addCurrentFrameVisionKernel = -1;
 
+		private RenderTexture persistentVisionTex = null;
+
 		private void Start()
 		{
-			persistentVisionTex = new RenderTexture(persistentVisionTex.width, persistentVisionTex.width, persistentVisionTex.depth)
+			int fogWidth = worldSize * fogDetailLevel;
+
+			persistentVisionTex = new RenderTexture(fogWidth, fogWidth, 0)
 			{
-				format = persistentVisionTex.format,
+				format = RenderTextureFormat.R8,
 				enableRandomWrite = true,
-				anisoLevel = persistentVisionTex.anisoLevel,
-				antiAliasing = persistentVisionTex.antiAliasing,
-				filterMode = persistentVisionTex.filterMode
+				anisoLevel = 0,
+				antiAliasing = 1,
+				filterMode = FilterMode.Bilinear
 			};
 			persistentVisionTex.Create();
 
@@ -55,16 +68,16 @@ namespace CCB.Roguelike
 
 			visionCompositorShader.SetTexture(addCurrentFrameVisionKernel, currentFrameVisionTexId, currentFrameVisionTex);
 			visionCompositorShader.SetTexture(addCurrentFrameVisionKernel, persistentVisionTexId, persistentVisionTex);
-			visionCompositorShader.SetInt(persistentVisionTexSizeId, persistentVisionTex.width);
+			visionCompositorShader.SetInt(persistentVisionTexSizeId, fogWidth);
 			visionCompositorShader.SetInt(currentFrameVisionTexSizeId, currentFrameVisionTex.width);
 			visionCompositorShader.SetFloat(fogQuadScaleId, transform.localScale.x);
 			// Todo: Remove hard-coded value.
-			visionCompositorShader.SetInt(worldSizeId, 256);
+			visionCompositorShader.SetInt(worldSizeId, worldSize);
 
 			fogMaterial.SetFloat(fogQuadScaleId, transform.localScale.x);
 			fogMaterial.SetTexture(persistentVisionTexId, persistentVisionTex);
 			// Todo: Remove hard-coded value.
-			fogMaterial.SetInt(worldSizeId, 256);
+			fogMaterial.SetInt(worldSizeId, worldSize);
 		}
 
 		public void FillFog()
@@ -86,13 +99,6 @@ namespace CCB.Roguelike
 		// This technically means FoW is delayed by a frame... but that's fine.
 		private void LateUpdate()
 		{
-			// Todo: Only update these if they've changed.
-			// Todo: Make the vision stencil camera/object local to the player.
-			
-			//persistentVisionMat.SetFloat(fogQuadScaleId, transform.localScale.x / 2);
-
-			//persistentVisionMat.SetPass(0);
-			//Graphics.Blit(persistentVisionTex, persistentVisionTex, persistentVisionMat);
 			visionCompositorShader.SetVector(worldSpaceCamPosId, playerCameraTransform.position);
 			visionCompositorShader.Dispatch(addCurrentFrameVisionKernel, 1, 1, 1);
 		}

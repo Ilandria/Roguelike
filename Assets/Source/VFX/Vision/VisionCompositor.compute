@@ -18,18 +18,39 @@ uint worldSize;
 [numthreads(THREAD_COUNT,THREAD_COUNT,1)]
 void AddCurrentFrameVision (uint3 threadId : SV_DispatchThreadID)
 {
-    int3 targetUv = int3(0, 0, 0);
+    // Account for world:texture resolution ratio to make sure we're writing to each pixel on output.
+    float pixelsPerThread = persistentVisionTexSize / (float)worldSize;
+    float virtualThreadCount = pixelsPerThread * THREAD_COUNT;
 
-    // Todo: Better interpolation/higher resolution - fog looks like crap atm.
-    targetUv.xy = (int2)((threadId.xy / (float)THREAD_COUNT) * currentFrameVisionTexSize);
-    float currentFrameVision = currentFrameVisionTex.Load(targetUv).r;
-
+    // Math for figuring out where to draw to within the persistent vision texture.
     float2 centerUv = worldSpaceCamPos / worldSize + 0.5f;
-    float2 fogQuadUvWidth = fogQuadScale / worldSize;
+    float fogQuadUvWidth = fogQuadScale / worldSize;
     float2 bottomLeftUv = centerUv - fogQuadUvWidth / 2.0f;
-    float2 uvIncrement = fogQuadUvWidth / THREAD_COUNT;
-    targetUv.xy = (int2)((bottomLeftUv + uvIncrement * threadId.xy) * persistentVisionTexSize);
-    float persistentVision = persistentVisionTex.Load(targetUv.xy).r;
+    float uvIncrement = fogQuadUvWidth / virtualThreadCount;
 
-    persistentVisionTex[targetUv.xy] = float4(max(persistentVision, currentFrameVision), 0, 0, 0);
+    // Todo: Offset vision by half a pixel?
+    //float halfUvIncrement = uvIncrement / 2;
+
+    int3 targetUv = int3(0, 0, 0);
+    int2 localPixel = int2(0, 0);
+
+    // Each thread is responsible for multiple texture pixels (see above).
+    for (int x = 0; x < pixelsPerThread; x++)
+    {
+        for (int y = 0; y < pixelsPerThread; y++)
+        {
+            localPixel = threadId * pixelsPerThread + int2(x, y);
+
+            // Sample the entire current frame vision texture.
+            targetUv.xy = (int2)((localPixel / virtualThreadCount) * currentFrameVisionTexSize);
+            float currentFrameVision = currentFrameVisionTex.Load(targetUv).r;
+
+            // Sample the relevant location within the persistent vision texture.
+            targetUv.xy = (int2)((bottomLeftUv + uvIncrement * localPixel) * persistentVisionTexSize);
+            float persistentVision = persistentVisionTex.Load(targetUv.xy).r;
+
+            // Write the new vision pixel.
+            persistentVisionTex[targetUv.xy] = float4(max(persistentVision, currentFrameVision), 0, 0, 0);
+        }
+    }
 }

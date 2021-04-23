@@ -79,7 +79,7 @@
 
 				fixed2 backUV = i.screenPos.xy / i.screenPos.w;
 				backUV.x = backUV.x * (_ScreenParams.x / _ScreenParams.y);
-				fixed3 backgroundColour = tex2D(backgroundTex, backUV + _WorldSpaceCameraPos.xy / 128).rgb;
+				fixed3 backgroundColour = tex2D(backgroundTex, backUV + _WorldSpaceCameraPos.xy / worldSize).rgb;
 
 				// Fog layer 1.
 				fixed2 fog1uv = i.uv * fogTex1_TexelSize.zw * fogScale1;
@@ -91,10 +91,10 @@
 				float2 jump = float2(_UJump, _VJump);
 
 				float3 uvw = FlowUVW(fog1uv, flow.xy, jump, _FlowOffset, _Tiling, time);
-				fixed4 tex = tex2D(fogTex1, uvw.xy+ _WorldSpaceCameraPos.xy / 6) * uvw.z;
+				fixed4 tex = tex2D(fogTex1, uvw.xy + _WorldSpaceCameraPos.xy / 8) * uvw.z;
 
 				// Todo: Cleanup magic number.
-				fixed3 fogColour = tex.rgb * fixed3(0.192, 0.128, 0.192);
+				fixed3 fogColour = tex.rgb * fixed3(0.192, 0.128, 0.192) * 0.1;
 
 				// Fog layer 2.
 				fixed2 fog2uv = i.uv * fogTex2_TexelSize.zw * fogScale2;
@@ -106,14 +106,14 @@
 				jump = float2(_UJump, _VJump);
 
 				uvw = FlowUVW(fog2uv, flow.xy, jump, _FlowOffset, _Tiling, time);
-				tex = tex2D(fogTex2, uvw.xy+ _WorldSpaceCameraPos.xy / 6) * uvw.z;
+				tex = tex2D(fogTex2, uvw.xy + _WorldSpaceCameraPos.xy / 8) * uvw.z;
 
 				// Todo: Cleanup magic number.
-				fogColour += tex.rgb * fixed3(0.256, 0.384, 0.384);
+				fogColour += tex.rgb * fixed3(0.256, 0.384, 0.384) * 0.1;
 
 				fixed3 col = fogColour.rgb;
-				fixed fogDensity = saturate(1 - persistentVision + (col.r + col.g + col.b));
-				col += backgroundColour;
+				col += backgroundColour * (1 - persistentVision);
+				fixed fogDensity = saturate(1 - (persistentVision - 0.1));
 				return fixed4(col, fogDensity);
 			}
 			ENDCG
