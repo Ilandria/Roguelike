@@ -44,9 +44,8 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 // Todo: Get vision textures to the correct size and to line up.
-                float2 uv = i.uv - _WorldSpaceCameraPos.xy / fogQuadScale;
                 fixed persistentVision = tex2D(_MainTex, i.uv).r;
-                fixed newVision = tex2D(currentFrameVision, uv).r;
+                fixed newVision = tex2D(currentFrameVision, (i.uv - 0.5) * 16 + 0.5 - _WorldSpaceCameraPos / 256).r;
                 return fixed4(max(persistentVision, newVision), 0, 0, 0);
             }
             ENDCG

@@ -57,7 +57,7 @@
 				float4 screenPos : TEXCOORD1;
 			};
 
-			uniform sampler2D _MainTex, fogTex1, fogTex2, _FlowMap, backgroundTex;
+			uniform sampler2D _MainTex, fogTex1, fogTex2, _FlowMap, backgroundTex, persistentVisionTex;
 			uniform fixed4 fogTex1_TexelSize, fogTex2_TexelSize, backgroundTex_ST;
 			uniform fixed fogScale1, fogScale2, fogSpeed1, fogSpeed2;
 			uniform float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffset;
@@ -75,9 +75,9 @@
 			fixed4 frag(v2f i) : SV_Target
 			{
 				// Todo: Get vision textures to the correct size and to line up.
-				float2 uv = i.uv + _WorldSpaceCameraPos.xy / 8;// fogQuadScale
+				float2 uv = (i.uv - 0.5) / 16 + 0.5 + _WorldSpaceCameraPos.xy / 256;// fogQuadScale
 
-				fixed persistentVision = tex2D(_MainTex, uv).r;
+				fixed persistentVision = tex2D(persistentVisionTex, uv).r;
 
 				fixed2 backUV = i.screenPos.xy / i.screenPos.w;
 				backUV.x = backUV.x * (_ScreenParams.x / _ScreenParams.y);

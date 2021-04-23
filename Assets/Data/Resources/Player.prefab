@@ -1318,8 +1318,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62b25d46652114b439287911c97dcc8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCameraTransform: {fileID: 4766069100879746934}
   persistentVisionTex: {fileID: 8400000, guid: 73cf130e26f80b0498b9ad4e49d99ea7, type: 2}
-  persistentVisionMat: {fileID: 2100000, guid: e99b1b389ccb0ed4ca77269a661f7166, type: 2}
+  currentFrameVisionTex: {fileID: 8400000, guid: e24abc4c3dbd7b84f833fe27f996256e,
+    type: 2}
+  visionCompositorShader: {fileID: 7200000, guid: 5c1f6a13fcfc5ba41a866a17eb101ffd,
+    type: 3}
   fogMaterial: {fileID: 2100000, guid: ce8a5a33a6788c8429f7cae5ad327cc5, type: 2}
 --- !u!1 &9055084414297445766
 GameObject:
