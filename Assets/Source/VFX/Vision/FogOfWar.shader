@@ -91,6 +91,7 @@
 				float2 jump = float2(_UJump, _VJump);
 
 				float3 uvw = FlowUVW(fog1uv, flow.xy, jump, _FlowOffset, _Tiling, time);
+				// Todo: Cleanup magic number.
 				fixed4 tex = tex2D(fogTex1, uvw.xy + _WorldSpaceCameraPos.xy / 8) * uvw.z;
 
 				// Todo: Cleanup magic number.
@@ -106,6 +107,7 @@
 				jump = float2(_UJump, _VJump);
 
 				uvw = FlowUVW(fog2uv, flow.xy, jump, _FlowOffset, _Tiling, time);
+				// Todo: Cleanup magic number.
 				tex = tex2D(fogTex2, uvw.xy + _WorldSpaceCameraPos.xy / 8) * uvw.z;
 
 				// Todo: Cleanup magic number.
