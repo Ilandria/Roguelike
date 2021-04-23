@@ -6,6 +6,9 @@ float2 worldSpaceCamPos;
 uint persistentVisionTexSize;
 uint currentFrameVisionTexSize;
 
+// X scale of the fog quad on the player object.
+float fogQuadScale;
+
 // Total width of world in game units.
 uint worldSize;
 
@@ -15,15 +18,16 @@ uint worldSize;
 [numthreads(THREAD_COUNT,THREAD_COUNT,1)]
 void AddCurrentFrameVision (uint3 threadId : SV_DispatchThreadID)
 {
+    // Todo: Better interpolation/higher resolution - fog looks like crap atm.
     int2 targetUv = (int2)((threadId.xy / (float)THREAD_COUNT) * currentFrameVisionTexSize);
-    float currentFrameVision = currentFrameVisionTex.Load(int3(targetUv, 0)).r;
+    float currentFrameVision = (float)currentFrameVisionTex.Load(int3(targetUv, 0)).r;
 
     float2 centerUv = worldSpaceCamPos / worldSize + 0.5f;
-    float2 fogQuadUvWidth = 16.0f / worldSize; // 16 = scale of fog quad on player object.
+    float2 fogQuadUvWidth = fogQuadScale / worldSize;
     float2 bottomLeftUv = centerUv - fogQuadUvWidth / 2.0f;
     float2 uvIncrement = fogQuadUvWidth / THREAD_COUNT;
     targetUv = (int2)((bottomLeftUv + uvIncrement * threadId.xy) * persistentVisionTexSize);
-    float persistentVision = persistentVisionTex.Load(int3(targetUv, 0)).r;
+    float persistentVision = (float)persistentVisionTex.Load(int3(targetUv, 0)).r;
 
     persistentVisionTex[targetUv] = float4(max(persistentVision, currentFrameVision), 0, 0, 0);
 }

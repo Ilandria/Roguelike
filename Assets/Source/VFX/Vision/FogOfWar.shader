@@ -2,8 +2,6 @@
 {
 	Properties
 	{
-		_MainTex ("Persistent Vision", 2D) = "white" { }
-
 		[NoScaleOffset] fogTex1 ("Fog Texture 1", 2D) = "black" { }
 		[NoScaleOffset] fogTex2 ("Fog Texture 2", 2D) = "black" { }
 		[PowerSlider(10.0)] fogScale1 ("Fog Scale 1", Range(0.001, 1)) = 0.03
@@ -20,7 +18,6 @@
 		_FlowOffset ("Flow Offset", Float) = 0
 
 		backgroundTex ("Background Texture", 2D) = "black" { }
-		fogQuadScale ("Fog Quad Scale", Float) = 16
 	}
 	SubShader
 	{
@@ -57,11 +54,12 @@
 				float4 screenPos : TEXCOORD1;
 			};
 
-			uniform sampler2D _MainTex, fogTex1, fogTex2, _FlowMap, backgroundTex, persistentVisionTex;
+			uniform sampler2D fogTex1, fogTex2, _FlowMap, backgroundTex, persistentVisionTex;
 			uniform fixed4 fogTex1_TexelSize, fogTex2_TexelSize, backgroundTex_ST;
 			uniform fixed fogScale1, fogScale2, fogSpeed1, fogSpeed2;
 			uniform float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffset;
 			uniform float fogQuadScale;
+			uniform uint worldSize;
 
 			v2f vert(appdata v)
 			{
@@ -75,7 +73,7 @@
 			fixed4 frag(v2f i) : SV_Target
 			{
 				// Todo: Get vision textures to the correct size and to line up.
-				float2 uv = (i.uv - 0.5) / 16 + 0.5 + _WorldSpaceCameraPos.xy / 256;// fogQuadScale
+				float2 uv = (i.uv - 0.5) / fogQuadScale + 0.5 + _WorldSpaceCameraPos.xy / worldSize;
 
 				fixed persistentVision = tex2D(persistentVisionTex, uv).r;
 

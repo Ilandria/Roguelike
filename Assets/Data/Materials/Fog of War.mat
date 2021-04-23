@@ -65,7 +65,7 @@ Material:
     - _Tiling: 1
     - _UJump: 0.25
     - _VJump: 0.25
-    - fogQuadScale: 8
+    - fogQuadScale: 16
     - fogScale: 16
     - fogScale1: 0.004
     - fogScale2: 0.002

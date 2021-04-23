@@ -57,10 +57,14 @@ namespace CCB.Roguelike
 			visionCompositorShader.SetTexture(addCurrentFrameVisionKernel, persistentVisionTexId, persistentVisionTex);
 			visionCompositorShader.SetInt(persistentVisionTexSizeId, persistentVisionTex.width);
 			visionCompositorShader.SetInt(currentFrameVisionTexSizeId, currentFrameVisionTex.width);
+			visionCompositorShader.SetFloat(fogQuadScaleId, transform.localScale.x);
 			// Todo: Remove hard-coded value.
 			visionCompositorShader.SetInt(worldSizeId, 256);
 
+			fogMaterial.SetFloat(fogQuadScaleId, transform.localScale.x);
 			fogMaterial.SetTexture(persistentVisionTexId, persistentVisionTex);
+			// Todo: Remove hard-coded value.
+			fogMaterial.SetInt(worldSizeId, 256);
 		}
 
 		public void FillFog()
@@ -84,7 +88,7 @@ namespace CCB.Roguelike
 		{
 			// Todo: Only update these if they've changed.
 			// Todo: Make the vision stencil camera/object local to the player.
-			fogMaterial.SetFloat(fogQuadScaleId, transform.localScale.x / 2);
+			
 			//persistentVisionMat.SetFloat(fogQuadScaleId, transform.localScale.x / 2);
 
 			//persistentVisionMat.SetPass(0);
