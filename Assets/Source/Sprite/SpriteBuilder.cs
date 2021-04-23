@@ -27,6 +27,7 @@ namespace CCB.Roguelike
 			RenderTexture.active = blitTarget;
 
 			// Blit each layer from the repository to the temporary texture.
+			Color originalColour = spriteMaterial.color;
 			spriteMaterial.color = skinColour;
 			Graphics.Blit(spriteLayers.GetLayer(bodyType, BodyPart.Body, bodyName).SpriteSheet, blitTarget, spriteMaterial);
 			Graphics.Blit(spriteLayers.GetLayer(bodyType, BodyPart.Nose, noseName).SpriteSheet, blitTarget, spriteMaterial);
@@ -36,6 +37,7 @@ namespace CCB.Roguelike
 			Graphics.Blit(spriteLayers.GetLayer(bodyType, BodyPart.Hair, hairName).SpriteSheet, blitTarget, spriteMaterial);
 			spriteMaterial.color = skinColour;
 			Graphics.Blit(spriteLayers.GetLayer(bodyType, BodyPart.Ears, earName).SpriteSheet, blitTarget, spriteMaterial);
+			spriteMaterial.color = originalColour;
 
 			// Finalize the output texture.
 			RenderTexture.active = previousRenderTexture;
