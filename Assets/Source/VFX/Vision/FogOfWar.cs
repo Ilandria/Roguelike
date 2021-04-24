@@ -18,6 +18,7 @@ namespace CCB.Roguelike
 		private Material fogMaterial = null;
 
 		// Todo: Move this somewhere more appropriate.
+		// Todo: Figure out why anything other than 256 causes a misalignment. Best guess is it's the fog quad scale.
 		// Multiple of 16 is due to compute shader thread group size.
 		[SerializeField]
 		[Tooltip("This must be a multiple of 16.")]

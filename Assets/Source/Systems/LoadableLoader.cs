@@ -9,6 +9,7 @@ namespace CCB.Roguelike
 {
 	public class LoadableLoader : MonoBehaviour
 	{
+		// Todo: This needs to be renamed to something like "loadableObjects" for clarity.
 		[SerializeField]
 		private List<Object> loadables = null;
 
@@ -37,6 +38,9 @@ namespace CCB.Roguelike
 
 		private Coroutine loadingCoroutine = null;
 
+		// Todo: Rename to "loadables" once the list above is renamed.
+		private List<ILoadable> iLoadables = null;
+
 		public void StartLoading()
 		{
 			if (loadingCoroutine == null)
@@ -57,7 +61,7 @@ namespace CCB.Roguelike
 			onLoadStart?.Invoke();
 			float loadedLoadables = 0.0f;
 
-			foreach (ILoadable loadable in loadables)
+			foreach (ILoadable loadable in iLoadables)
 			{
 				yield return loadable.Load((pct, status) =>
 				{
@@ -77,12 +81,23 @@ namespace CCB.Roguelike
 			// Todo: Move this out to some options object - don't hardcode it here.
 			Application.targetFrameRate = 60;
 
+			iLoadables = new List<ILoadable>();
+
 			foreach (Object loadable in loadables)
 			{
-				if (loadable as ILoadable == null)
+				// Needed because the List<Object> assumes added GameObjects are GameObjects since Unity has no support for referencing interfaces.
+				if (loadable as GameObject != null)
 				{
-					loadables.Remove(loadable);
-					Debug.LogWarning($"Removed {loadable.name} from LoadableLoader {name}'s loadables list as it is not an ILoadable.");
+					// In case there are multiple ILoadables on the object...
+					foreach (ILoadable actualLoadable in ((GameObject)loadable).GetComponents<ILoadable>())
+					{
+						iLoadables.Add(actualLoadable);
+					}
+				}
+				// Scriptable object ILoadables get caught here.
+				else if (loadable as ILoadable != null)
+				{
+					iLoadables.Add(loadable as ILoadable);
 				}
 			}
 
