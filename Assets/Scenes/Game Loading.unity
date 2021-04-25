@@ -393,6 +393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadables:
   - {fileID: 11400000, guid: 76c131e064772ca45a05725f142e3cae, type: 2}
+  - {fileID: 11400000, guid: 31c9df58a3c740c418a82bcf8b61681f, type: 2}
   loadOnAwake: 1
   loadProgress: 0
   loadStatus: 

@@ -22,16 +22,20 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private GameObject joinButton = null;
 
+		public bool IsCreateCharacterCard { get; private set; } = false;
+
 		public void Start()
 		{
 			if (CharacterSummary != null)
 			{
+				IsCreateCharacterCard = false;
 				newButton.SetActive(false);
 				nameText.text = CharacterSummary.Name;
 			}
 			else
 			{
-				nameText.text = "New Character";
+				IsCreateCharacterCard = true;
+				nameText.text = "Create New";
 				deleteButton.SetActive(false);
 				playButton.SetActive(false);
 				joinButton.SetActive(false);

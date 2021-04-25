@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace CCB.Roguelike
 {
-	[CreateAssetMenu(fileName = "New Character Sprite Components", menuName = "CCB/Singleton/Character Sprite Components")]
+	[CreateAssetMenu(fileName = "New Sprite Layers", menuName = "CCB/Data/Sprite Layers")]
 	public class SpriteLayers : ScriptableObject, ILoadable
 	{
 		[SerializeField]

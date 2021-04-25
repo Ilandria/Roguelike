@@ -1413,7 +1413,7 @@ MonoBehaviour:
     value: 50
   threshold:
     overrideState: 1
-    value: 1.2
+    value: 1
   softKnee:
     overrideState: 0
     value: 0.5

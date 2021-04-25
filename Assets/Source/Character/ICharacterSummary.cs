@@ -4,6 +4,8 @@ namespace CCB.Roguelike
 {
 	public interface ICharacterSummary
 	{
+		bool IsValid { get; }
+
 		Guid Guid { get; }
 
 		string Name { get; }

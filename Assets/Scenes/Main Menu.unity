@@ -660,7 +660,6 @@ Transform:
   - {fileID: 1706083785}
   - {fileID: 1116705243}
   - {fileID: 2579024681310567457}
-  - {fileID: 684654634}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -801,52 +800,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 669103084}
   m_CullTransparentMesh: 0
---- !u!1 &684654633
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 684654634}
-  - component: {fileID: 684654635}
-  m_Layer: 31
-  m_Name: Character Card Loader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &684654634
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 684654633}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 475196581}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &684654635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 684654633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51fa0d2d56d6f34408e1a5ce707e5fad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterCardPrefab: {fileID: 1628927682353226124, guid: 4e95e1bcb6d8a2c4fbd75b4a53c24b56,
-    type: 3}
-  characterList: {fileID: 1826393719}
 --- !u!1 &743291558
 GameObject:
   m_ObjectHideFlags: 0
@@ -860,7 +813,7 @@ GameObject:
   - component: {fileID: 743291561}
   - component: {fileID: 743291560}
   m_Layer: 5
-  m_Name: Menu Mask
+  m_Name: Character List Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2663,6 +2616,9 @@ GameObject:
   - component: {fileID: 1826393719}
   - component: {fileID: 1826393720}
   - component: {fileID: 1826393721}
+  - component: {fileID: 1826393722}
+  - component: {fileID: 1826393724}
+  - component: {fileID: 1826393723}
   m_Layer: 5
   m_Name: Character List
   m_TagString: Untagged
@@ -2729,6 +2685,61 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &1826393722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826393718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51fa0d2d56d6f34408e1a5ce707e5fad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterDataRepository: {fileID: 11400000, guid: 31c9df58a3c740c418a82bcf8b61681f,
+    type: 2}
+  characterCardPrefab: {fileID: 1628927682353226124, guid: 4e95e1bcb6d8a2c4fbd75b4a53c24b56,
+    type: 3}
+  characterList: {fileID: 1826393719}
+--- !u!114 &1826393723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826393718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1826393724
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826393718}
+  m_CullTransparentMesh: 1
 --- !u!1 &1848461855
 GameObject:
   m_ObjectHideFlags: 0
@@ -3219,16 +3230,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadables:
   - {fileID: 11400000, guid: 76c131e064772ca45a05725f142e3cae, type: 2}
-  - {fileID: 684654633}
+  - {fileID: 11400000, guid: 31c9df58a3c740c418a82bcf8b61681f, type: 2}
   loadOnAwake: 1
   loadProgress: 0
   loadStatus: 
   onLoadStart:
     m_PersistentCalls:
+      m_Calls: []
+  onLoadProgress:
+    m_PersistentCalls:
+      m_Calls: []
+  onLoadStatus:
+    m_PersistentCalls:
+      m_Calls: []
+  onLoadComplete:
+    m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 684654635}
-        m_TargetAssemblyTypeName: CCB.Roguelike.CharacterCardLoader, Assembly-CSharp
-        m_MethodName: DestroyAllCards
+      - m_Target: {fileID: 1826393722}
+        m_TargetAssemblyTypeName: CCB.Roguelike.CharacterListController, Assembly-CSharp
+        m_MethodName: CreateCards
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3238,15 +3258,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onLoadProgress:
-    m_PersistentCalls:
-      m_Calls: []
-  onLoadStatus:
-    m_PersistentCalls:
-      m_Calls: []
-  onLoadComplete:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &2579024681310567463
 GameObject:
   m_ObjectHideFlags: 0
