@@ -15,9 +15,21 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private Transform characterList = null;
 
+		private Transform createNewCharacterCard = null;
+
 		public void CreateCards()
 		{
 			StartCoroutine(RegenerateCards());
+		}
+
+		private void OnEnable()
+		{
+			characterDataRepository.OnNewCharacterCreated += OnNewCharacterCreated;
+		}
+
+		private void OnDisable()
+		{
+			characterDataRepository.OnNewCharacterCreated -= OnNewCharacterCreated;
 		}
 
 		private void DestroyAllCards()
@@ -37,13 +49,25 @@ namespace CCB.Roguelike
 			// Spawn the card game objects as children of the list UI element.
 			foreach (CharacterDataModel dataModel in characterDataRepository.DataModels.OrderByDescending(character => character.LastPlayed))
 			{
-				CharacterCard characterCard = Instantiate(characterCardPrefab, characterList, false).GetComponent<CharacterCard>();
-				characterCard.CharacterSummary = dataModel;
+				CreateCard(dataModel);
 				yield return null;
 			}
 
 			// The last card is a "create character" card.
-			Instantiate(characterCardPrefab, characterList, false);
+			createNewCharacterCard = Instantiate(characterCardPrefab, characterList, false).transform;
+		}
+
+		private void CreateCard(CharacterDataModel characterData)
+		{
+			CharacterCard characterCard = Instantiate(characterCardPrefab, characterList, false).GetComponent<CharacterCard>();
+			characterCard.CharacterSummary = characterData;
+		}
+
+		private void OnNewCharacterCreated(CharacterDataModel newCharacterData)
+		{
+			createNewCharacterCard.SetParent(null, true);
+			CreateCard(newCharacterData);
+			createNewCharacterCard.SetParent(characterList, true);
 		}
 	}
 }

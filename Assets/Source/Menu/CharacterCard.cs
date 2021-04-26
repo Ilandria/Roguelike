@@ -40,6 +40,8 @@ namespace CCB.Roguelike
 				playButton.SetActive(false);
 				joinButton.SetActive(false);
 			}
+
+			// Todo: Show some kind of UI warning on characters that are not using the current game's format.
 		}
 
 		// Todo: Start game, delete, show character info, etc.

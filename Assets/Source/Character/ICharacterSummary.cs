@@ -4,8 +4,6 @@ namespace CCB.Roguelike
 {
 	public interface ICharacterSummary
 	{
-		bool IsValid { get; }
-
 		Guid Guid { get; }
 
 		string Name { get; }
@@ -13,5 +11,7 @@ namespace CCB.Roguelike
 		int Level { get; }
 
 		DateTime LastPlayed { get; }
+
+		bool IsNewCharacter { get; }
 	}
 }

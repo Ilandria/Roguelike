@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 namespace CCB.Roguelike
 {
@@ -12,6 +12,13 @@ namespace CCB.Roguelike
 	{
 		[SerializeField]
 		private List<CharacterDataModel> dataModels;
+
+		public event CharacterDataModelDelegate OnNewCharacterCreated;
+
+		public event CharacterDataModelDelegate OnCharacterDeleted;
+
+		// Todo: Fires regardless of success or failure, might want to change this at some point.
+		public event CharacterDataModelDelegate OnCharacterSaveComplete;
 
 		public IEnumerable<CharacterDataModel> DataModels => dataModels;
 
@@ -35,13 +42,11 @@ namespace CCB.Roguelike
 				{
 					string fileName = characterFiles[i];
 
-					CharacterDataModel dataModel = new CharacterDataModel();
-
 					// Todo: Might want to catch file reading exceptions.
-					dataModel.PopulateFromJson(File.ReadAllText(fileName, System.Text.Encoding.UTF8));
+					CharacterDataModel dataModel = CharacterDataModel.CreateFromJson(File.ReadAllText(fileName, System.Text.Encoding.UTF8));
 
 					// Only load characters with valid guid file names that match the loaded character.
-					if (Path.GetFileNameWithoutExtension(fileName).Equals(dataModel.Guid.ToString(), StringComparison.OrdinalIgnoreCase))
+					if (Path.GetFileNameWithoutExtension(fileName).Equals(dataModel?.Guid.ToString(), StringComparison.OrdinalIgnoreCase))
 					{
 						dataModels.Add(dataModel);
 					}
@@ -84,17 +89,20 @@ namespace CCB.Roguelike
 		{
 			if (IsLoaded)
 			{
-				string characterJson = DataModels.DefaultIfEmpty(null).SingleOrDefault(data => data.Guid.Equals(characterGuid))?.SerializeToJson();
+				// Get the serialized json string defining the character. Save data version is updated to current format.
+				CharacterDataModel characterToSave = DataModels.DefaultIfEmpty(null).SingleOrDefault(data => data.Guid.Equals(characterGuid));
 
-				if (!string.IsNullOrWhiteSpace(characterJson))
+				if (characterToSave != null)
 				{
 					string targetFilePath = $"{savedGamePath}/{characterGuid}";
 					string tempFile = $"savedata.tmp";
 
 					try
 					{
-						File.WriteAllText(tempFile, characterJson, System.Text.Encoding.UTF8);
+						// Write to a temp file then copy to the original in case something goes wrong during the write.
+						File.WriteAllText(tempFile, characterToSave.SerializeToJson(), System.Text.Encoding.UTF8);
 						File.Copy(tempFile, $"{targetFilePath}.json", true);
+						OnCharacterSaveComplete?.Invoke(characterToSave);
 					}
 					catch (Exception exception)
 					{
@@ -105,6 +113,11 @@ namespace CCB.Roguelike
 					File.Delete(tempFile);
 				}
 			}
+		}
+
+		public void SaveCharacter(CharacterDataModel characterData)
+		{
+			SaveCharacter(characterData.Guid);
 		}
 
 		public void SaveAllCharacters()
@@ -128,7 +141,19 @@ namespace CCB.Roguelike
 				{
 					dataModels.Remove(characterToDelete);
 					File.Delete($"{savedGamePath}/{characterGuid}.json");
+					OnCharacterDeleted?.Invoke(characterToDelete);
 				}
+			}
+		}
+
+		public void CreateNewCharacter()
+		{
+			if (IsLoaded)
+			{
+				CharacterDataModel newCharacter = new CharacterDataModel();
+				dataModels.Add(newCharacter);
+				SaveCharacter(newCharacter);
+				OnNewCharacterCreated?.Invoke(newCharacter);
 			}
 		}
 	}

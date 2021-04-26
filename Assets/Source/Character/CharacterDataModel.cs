@@ -8,7 +8,7 @@ namespace CCB.Roguelike
 	public class CharacterDataModel : ICharacterSummary
 	{
 		[JsonProperty]
-		public string DataVersion { get; private set; }
+		public string DataVersion { get; private set; } = string.Empty;
 
 		[JsonProperty]
 		public Guid Guid { get; private set; }
@@ -22,32 +22,39 @@ namespace CCB.Roguelike
 		[JsonProperty]
 		public DateTime LastPlayed { get; private set; }
 
-		[JsonIgnore]
-		public bool IsValid { get; private set; }
+		[JsonProperty]
+		public bool IsNewCharacter { get; private set; }
 
 		// Todo: More character stats.
 
 		public CharacterDataModel()
 		{
+			DataVersion = Application.version;
 			Guid = Guid.NewGuid();
+			Name = "New Character";
+			IsNewCharacter = true;
+		}
+
+		public static CharacterDataModel CreateFromJson(string jsonString)
+		{
+			return JsonConvert.DeserializeObject<CharacterDataModel>(jsonString);
 		}
 
 		public void PopulateFromJson(string jsonString)
 		{
-			try
-			{
-				JsonConvert.PopulateObject(jsonString, this, new JsonSerializerSettings() { MissingMemberHandling = MissingMemberHandling.Error });
-			}
-			catch (JsonSerializationException exception)
-			{
-				IsValid = false;
-				Debug.LogWarning($"Issue when loading character ({jsonString}).\n{exception}");
-			}
+			JsonConvert.PopulateObject(jsonString, this);
 		}
 
 		public string SerializeToJson()
 		{
-			DataVersion = Application.version;
+			if (!DataVersion.Equals(Application.version))
+			{
+				Debug.Log($"Migrating character data for {Guid} ({Name}): {DataVersion} => {Application.version}");
+
+				// Todo: Handle any special case for version conversions here. For right now it's just assuming everything's fine.
+				DataVersion = Application.version;
+			}
+
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
 	}
