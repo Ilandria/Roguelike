@@ -13,13 +13,6 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private List<CharacterDataModel> dataModels;
 
-		public event CharacterDataModelDelegate OnNewCharacterCreated;
-
-		public event CharacterDataModelDelegate OnCharacterDeleted;
-
-		// Todo: Fires regardless of success or failure, might want to change this at some point.
-		public event CharacterDataModelDelegate OnCharacterSaveComplete;
-
 		public IEnumerable<CharacterDataModel> DataModels => dataModels;
 
 		public bool IsLoaded { get; private set; } = false;
@@ -77,20 +70,48 @@ namespace CCB.Roguelike
 			dataModels = null;
 		}
 
-		public void AddCharacterData(CharacterDataModel characterData)
+		public bool Contains(Guid characterGuid)
 		{
-			if (IsLoaded && !dataModels.Where(data => data.Guid.Equals(characterData.Guid)).Any())
-			{
-				dataModels.Add(characterData);
-			}
-		}
+			bool contains = false;
 
-		public void SaveCharacter(Guid characterGuid)
-		{
 			if (IsLoaded)
 			{
-				// Get the serialized json string defining the character. Save data version is updated to current format.
-				CharacterDataModel characterToSave = DataModels.DefaultIfEmpty(null).SingleOrDefault(data => data.Guid.Equals(characterGuid));
+				contains = dataModels.Find(data => data.Guid.Equals(characterGuid)) != null;
+			}
+
+			return contains;
+		}
+
+		/// <summary>
+		/// Add the given character data to the repository without saving it to disk.
+		/// </summary>
+		/// <param name="characterData">The character data to add.</param>
+		/// <returns>True if successful, false otherwise (duplicate entry, etc.).</returns>
+		public bool AddCharacterData(CharacterDataModel characterData)
+		{
+			bool success = false;
+
+			if (IsLoaded && !Contains(characterData.Guid))
+			{
+				dataModels.Add(characterData);
+				success = true;
+			}
+
+			return success;
+		}
+
+		/// <summary>
+		/// Save the given character to disk in the most recent data format.
+		/// </summary>
+		/// <param name="characterGuid">Guid of the character data to save to disk.</param>
+		/// <returns>True if success, false otherwise.</returns>
+		public bool SaveCharacter(Guid characterGuid)
+		{
+			bool success = false;
+
+			if (IsLoaded)
+			{
+				CharacterDataModel characterToSave = dataModels.Find(data => data.Guid.Equals(characterGuid));
 
 				if (characterToSave != null)
 				{
@@ -99,10 +120,11 @@ namespace CCB.Roguelike
 
 					try
 					{
+						// Get the serialized json string defining the character. Save data version is updated to current format.
 						// Write to a temp file then copy to the original in case something goes wrong during the write.
 						File.WriteAllText(tempFile, characterToSave.SerializeToJson(), System.Text.Encoding.UTF8);
 						File.Copy(tempFile, $"{targetFilePath}.json", true);
-						OnCharacterSaveComplete?.Invoke(characterToSave);
+						success = true;
 					}
 					catch (Exception exception)
 					{
@@ -113,26 +135,47 @@ namespace CCB.Roguelike
 					File.Delete(tempFile);
 				}
 			}
+
+			return success;
 		}
 
-		public void SaveCharacter(CharacterDataModel characterData)
+		/// <summary>
+		/// Save the given character to disk in the most recent data format.
+		/// </summary>
+		/// <param name="characterData">Character data to save to disk.</param>
+		/// <returns>True if success, false otherwise.</returns>
+		public bool SaveCharacter(CharacterDataModel characterData)
 		{
-			SaveCharacter(characterData.Guid);
+			return SaveCharacter(characterData.Guid);
 		}
 
-		public void SaveAllCharacters()
+		/// <summary>
+		/// Saves all loaded characters to disk in the most recent data format.
+		/// </summary>
+		/// <returns>A collection containing the success/failure states of saving each character.</returns>
+		public IEnumerable<KeyValuePair<CharacterDataModel, bool>> SaveAllCharacters()
 		{
+			Dictionary<CharacterDataModel, bool> results = new Dictionary<CharacterDataModel, bool>();
+
 			if (IsLoaded)
 			{
 				foreach (CharacterDataModel data in DataModels)
 				{
-					SaveCharacter(data.Guid);
+					results.Add(data, SaveCharacter(data.Guid));
 				}
 			}
+
+			return results;
 		}
 
-		public void DeleteCharacter(Guid characterGuid)
+		/// <summary>
+		/// Removes the character with the given guid from the repository and deletes its data from disk.
+		/// </summary>
+		/// <returns>True if successfully removed and deleted, false otherwise.</returns>
+		public bool DeleteCharacter(Guid characterGuid)
 		{
+			bool success = false;
+
 			if (IsLoaded)
 			{
 				CharacterDataModel characterToDelete = DataModels.DefaultIfEmpty(null).SingleOrDefault(data => data.Guid.Equals(characterGuid));
@@ -141,20 +184,34 @@ namespace CCB.Roguelike
 				{
 					dataModels.Remove(characterToDelete);
 					File.Delete($"{savedGamePath}/{characterGuid}.json");
-					OnCharacterDeleted?.Invoke(characterToDelete);
+					success = true;
 				}
 			}
+
+			return success;
 		}
 
-		public void CreateNewCharacter()
+		/// <summary>
+		/// Creates a new, empty character then saves it to disk.
+		/// </summary>
+		/// <returns>The <see cref="CharacterDataModel"/> that was created if successfully created and saved, null otherwise.</returns>
+		public CharacterDataModel CreateNewCharacter()
 		{
-			if (IsLoaded)
+			CharacterDataModel newCharacter = new CharacterDataModel();
+
+			// Attempt to add the new character.
+			if (AddCharacterData(newCharacter))
 			{
-				CharacterDataModel newCharacter = new CharacterDataModel();
-				dataModels.Add(newCharacter);
-				SaveCharacter(newCharacter);
-				OnNewCharacterCreated?.Invoke(newCharacter);
+				// Attempt to save the new character if it was added.
+				if(!SaveCharacter(newCharacter))
+				{
+					// Remove it if it failed to save.
+					dataModels.Remove(newCharacter);
+					newCharacter = null;
+				}
 			}
+
+			return newCharacter;
 		}
 	}
 }

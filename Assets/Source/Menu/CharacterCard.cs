@@ -8,6 +8,9 @@ namespace CCB.Roguelike
 		public ICharacterSummary CharacterSummary { get; set; } = null;
 
 		[SerializeField]
+		private CharacterManagementController characterManagementController = null;
+
+		[SerializeField]
 		private TextMeshProUGUI nameText = null;
 
 		[SerializeField]
@@ -44,6 +47,11 @@ namespace CCB.Roguelike
 			// Todo: Show some kind of UI warning on characters that are not using the current game's format.
 		}
 
-		// Todo: Start game, delete, show character info, etc.
+		// Todo: Start game, show character info, etc.
+
+		public void RequestDelete()
+		{
+			characterManagementController.RequestCharacterDeletion(CharacterSummary.Guid);
+		}
 	}
 }

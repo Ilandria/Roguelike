@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3c1f51d1eecd748bc51b4b13f70088, type: 3}
+  m_Name: Player Character Management Controller
+  m_EditorClassIdentifier: 
+  characterDataRepository: {fileID: 11400000, guid: 31c9df58a3c740c418a82bcf8b61681f,
+    type: 2}

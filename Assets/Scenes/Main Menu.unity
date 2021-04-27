@@ -2697,7 +2697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51fa0d2d56d6f34408e1a5ce707e5fad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterDataRepository: {fileID: 11400000, guid: 31c9df58a3c740c418a82bcf8b61681f,
+  characterManagementController: {fileID: 11400000, guid: e3078a997ee363041ae2b5e2f34c1d8e,
     type: 2}
   characterCardPrefab: {fileID: 1628927682353226124, guid: 4e95e1bcb6d8a2c4fbd75b4a53c24b56,
     type: 3}

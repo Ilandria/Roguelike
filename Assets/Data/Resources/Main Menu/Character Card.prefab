@@ -498,8 +498,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: 31c9df58a3c740c418a82bcf8b61681f, type: 2}
-        m_TargetAssemblyTypeName: CCB.Roguelike.CharacterDataRepository, Assembly-CSharp
+      - m_Target: {fileID: 11400000, guid: e3078a997ee363041ae2b5e2f34c1d8e, type: 2}
+        m_TargetAssemblyTypeName: CCB.Roguelike.CharacterManagementController, Assembly-CSharp
         m_MethodName: CreateNewCharacter
         m_Mode: 1
         m_Arguments:
@@ -709,7 +709,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1628927682047493910}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 593844857295740482}
+        m_TargetAssemblyTypeName: CCB.Roguelike.CharacterCard, Assembly-CSharp
+        m_MethodName: RequestDelete
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1628927682177493472
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,6 +947,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 664ddfa5407656242b26171b33f25ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterManagementController: {fileID: 11400000, guid: e3078a997ee363041ae2b5e2f34c1d8e,
+    type: 2}
   nameText: {fileID: 1628927682177493474}
   newButton: {fileID: 1628927682026529018}
   deleteButton: {fileID: 1628927682047493915}

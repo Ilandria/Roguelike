@@ -29,7 +29,6 @@ namespace CCB.Roguelike
 
 		public CharacterDataModel()
 		{
-			DataVersion = Application.version;
 			Guid = Guid.NewGuid();
 			Name = "New Character";
 			IsNewCharacter = true;
@@ -47,13 +46,14 @@ namespace CCB.Roguelike
 
 		public string SerializeToJson()
 		{
-			if (!DataVersion.Equals(Application.version))
+			if (!IsNewCharacter && !DataVersion.Equals(Application.version))
 			{
 				Debug.Log($"Migrating character data for {Guid} ({Name}): {DataVersion} => {Application.version}");
 
 				// Todo: Handle any special case for version conversions here. For right now it's just assuming everything's fine.
-				DataVersion = Application.version;
 			}
+
+			DataVersion = Application.version;
 
 			return JsonConvert.SerializeObject(this, Formatting.Indented);
 		}
