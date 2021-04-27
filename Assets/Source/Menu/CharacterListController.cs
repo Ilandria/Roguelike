@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -18,9 +19,16 @@ namespace CCB.Roguelike
 
 		private Transform createNewCharacterCard = null;
 
+		private Dictionary<Guid, CharacterCard> characterCards = null;
+
 		public void CreateCards()
 		{
 			StartCoroutine(RegenerateCards());
+		}
+
+		private void Start()
+		{
+			characterCards = new Dictionary<Guid, CharacterCard>();
 		}
 
 		private void OnEnable()
@@ -55,6 +63,7 @@ namespace CCB.Roguelike
 				if (card.CharacterSummary != null && card.CharacterSummary.Guid.Equals(characterGuid))
 				{
 					Destroy(child.gameObject);
+					characterCards.Remove(card.CharacterSummary.Guid);
 				}
 			}
 		}
@@ -80,6 +89,7 @@ namespace CCB.Roguelike
 		{
 			CharacterCard characterCard = Instantiate(characterCardPrefab, characterList, false).GetComponent<CharacterCard>();
 			characterCard.CharacterSummary = characterData;
+			characterCards.Add(characterData.Guid, characterCard);
 		}
 
 		// Raised by the Character Management Controller when a new character is created and saved to disk.
@@ -93,8 +103,8 @@ namespace CCB.Roguelike
 		// Raised by the Character Management Controller when a Character Card requests to be deleted.
 		private void OnCharacterDeleteRequested(Guid characterGuid)
 		{
-			// Todo: Show an "Are you sure you want to delete this character?" prompt before firing this delete event.
-			characterManagementController.DeleteCharacter(characterGuid);
+			// Make the card being deleted show its delete confirmation prompt.
+			characterCards[characterGuid].ShowDeleteConfirmation();
 		}
 
 		// Raised by the Character Management Controller when a character's data has been unloaded and deleted from disk.

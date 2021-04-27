@@ -25,23 +25,27 @@ namespace CCB.Roguelike
 		[SerializeField]
 		private GameObject joinButton = null;
 
+		[SerializeField]
+		private GameObject existingCharacterUi = null;
+
+		[SerializeField]
+		private GameObject deleteCharacterUi = null;
+
 		public bool IsCreateCharacterCard { get; private set; } = false;
 
 		public void Start()
 		{
 			if (CharacterSummary != null)
 			{
-				IsCreateCharacterCard = false;
-				newButton.SetActive(false);
 				nameText.text = CharacterSummary.Name;
 			}
 			else
 			{
 				IsCreateCharacterCard = true;
-				nameText.text = "Create New";
 				deleteButton.SetActive(false);
 				playButton.SetActive(false);
 				joinButton.SetActive(false);
+				newButton.SetActive(true);
 			}
 
 			// Todo: Show some kind of UI warning on characters that are not using the current game's format.
@@ -49,9 +53,30 @@ namespace CCB.Roguelike
 
 		// Todo: Start game, show character info, etc.
 
+		// Called by the UI to request that this character be deleted.
 		public void RequestDelete()
 		{
 			characterManagementController.RequestCharacterDeletion(CharacterSummary.Guid);
+		}
+
+		// Called by the Character List Controller after RequestDelete is called from the UI button.
+		public void ShowDeleteConfirmation()
+		{
+			existingCharacterUi.SetActive(false);
+			deleteCharacterUi.SetActive(true);
+		}
+
+		// Called by the UI to confirm character deletion.
+		public void HideDeleteConfirmation()
+		{
+			deleteCharacterUi.SetActive(false);
+			existingCharacterUi.SetActive(true);
+		}
+
+		public void ConfirmDelete()
+		{
+			// Notify the management controller of the deletion so it can propagate as required.
+			characterManagementController.DeleteCharacter(CharacterSummary.Guid);
 		}
 	}
 }
