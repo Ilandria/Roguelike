@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace CCB.Roguelike
 {
 	public class CharacterCard : MonoBehaviour
 	{
-		public ICharacterSummary CharacterSummary { get; set; } = null;
+		public CharacterDataModel CharacterData { get; set; } = null;
 
 		[SerializeField]
 		private CharacterManagementController characterManagementController = null;
@@ -35,9 +36,9 @@ namespace CCB.Roguelike
 
 		public void Start()
 		{
-			if (CharacterSummary != null)
+			if (CharacterData != null)
 			{
-				nameText.text = CharacterSummary.Name;
+				nameText.text = CharacterData.Name;
 			}
 			else
 			{
@@ -56,7 +57,7 @@ namespace CCB.Roguelike
 		// Called by the UI to request that this character be deleted.
 		public void RequestDelete()
 		{
-			characterManagementController.RequestCharacterDeletion(CharacterSummary.Guid);
+			characterManagementController.RequestCharacterDeletion(CharacterData.Guid);
 		}
 
 		// Called by the Character List Controller after RequestDelete is called from the UI button.
@@ -76,7 +77,13 @@ namespace CCB.Roguelike
 		public void ConfirmDelete()
 		{
 			// Notify the management controller of the deletion so it can propagate as required.
-			characterManagementController.DeleteCharacter(CharacterSummary.Guid);
+			characterManagementController.DeleteCharacter(CharacterData.Guid);
+		}
+
+		// Sets the character this card represents as the active character for gameplay and launches the game.
+		public void StartSinglePlayer()
+		{
+			characterManagementController.StartSinglePlayer(CharacterData);
 		}
 	}
 }

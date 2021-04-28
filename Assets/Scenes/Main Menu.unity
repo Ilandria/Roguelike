@@ -2702,6 +2702,21 @@ MonoBehaviour:
   characterCardPrefab: {fileID: 1628927682353226124, guid: 4e95e1bcb6d8a2c4fbd75b4a53c24b56,
     type: 3}
   characterList: {fileID: 1826393719}
+  onStartSinglePlayer:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1116705242}
+        m_TargetAssemblyTypeName: CCB.Roguelike.SceneSwitcher, Assembly-CSharp
+        m_MethodName: SwitchScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1826393723
 MonoBehaviour:
   m_ObjectHideFlags: 0

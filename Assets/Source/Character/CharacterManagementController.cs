@@ -12,6 +12,8 @@ namespace CCB.Roguelike
 
 		public IEnumerable<CharacterDataModel> Characters => characterDataRepository.DataModels;
 
+		public CharacterDataModel ActiveCharacter { get; private set; }
+
 		public event CharacterDataModelDelegate OnNewCharacterCreated;
 
 		public event CharacterDataModelDelegate OnCreateNewCharacterFailed;
@@ -25,6 +27,8 @@ namespace CCB.Roguelike
 		public event GuidDelegate OnCharacterSaved;
 
 		public event GuidDelegate OnCharacterSaveFailed;
+
+		public event Delegate OnStartSinglePlayer;
 
 		public void CreateNewCharacter()
 		{
@@ -66,6 +70,21 @@ namespace CCB.Roguelike
 			else
 			{
 				OnCharacterSaveFailed?.Invoke(characterGuid);
+			}
+		}
+
+		public void ClearActiveCharacter()
+		{
+			ActiveCharacter = null;
+		}
+
+		// Todo: This doesn't really belong in this class, it should eventually be moved out.
+		public void StartSinglePlayer(CharacterDataModel characterData)
+		{
+			if (ActiveCharacter == null)
+			{
+				ActiveCharacter = characterData;
+				OnStartSinglePlayer?.Invoke();
 			}
 		}
 	}

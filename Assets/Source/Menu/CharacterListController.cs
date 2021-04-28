@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CCB.Roguelike
 {
@@ -16,6 +17,9 @@ namespace CCB.Roguelike
 
 		[SerializeField]
 		private Transform characterList = null;
+
+		[SerializeField]
+		private UnityEvent onStartSinglePlayer = new UnityEvent();
 
 		private Transform createNewCharacterCard = null;
 
@@ -36,6 +40,8 @@ namespace CCB.Roguelike
 			characterManagementController.OnNewCharacterCreated += OnNewCharacterCreated;
 			characterManagementController.OnCharacterDeleted += OnCharacterDeleted;
 			characterManagementController.OnCharacterDeleteRequested += OnCharacterDeleteRequested;
+			characterManagementController.OnStartSinglePlayer += OnStartSinglePlayer;
+			characterManagementController.ClearActiveCharacter();
 		}
 
 		private void OnDisable()
@@ -43,6 +49,7 @@ namespace CCB.Roguelike
 			characterManagementController.OnNewCharacterCreated -= OnNewCharacterCreated;
 			characterManagementController.OnCharacterDeleted -= OnCharacterDeleted;
 			characterManagementController.OnCharacterDeleteRequested -= OnCharacterDeleteRequested;
+			characterManagementController.OnStartSinglePlayer -= OnStartSinglePlayer;
 		}
 
 		private void DestroyAllCards()
@@ -60,10 +67,10 @@ namespace CCB.Roguelike
 				CharacterCard card = child.GetComponent<CharacterCard>();
 
 				// CharacterSummary is null on the last child since it's the "create character" card.
-				if (card.CharacterSummary != null && card.CharacterSummary.Guid.Equals(characterGuid))
+				if (card.CharacterData != null && card.CharacterData.Guid.Equals(characterGuid))
 				{
 					Destroy(child.gameObject);
-					characterCards.Remove(card.CharacterSummary.Guid);
+					characterCards.Remove(card.CharacterData.Guid);
 				}
 			}
 		}
@@ -88,7 +95,7 @@ namespace CCB.Roguelike
 		private void CreateCard(CharacterDataModel characterData)
 		{
 			CharacterCard characterCard = Instantiate(characterCardPrefab, characterList, false).GetComponent<CharacterCard>();
-			characterCard.CharacterSummary = characterData;
+			characterCard.CharacterData = characterData;
 			characterCards.Add(characterData.Guid, characterCard);
 		}
 
@@ -111,6 +118,13 @@ namespace CCB.Roguelike
 		private void OnCharacterDeleted(Guid characterGuid)
 		{
 			DestroyCard(characterGuid);
+		}
+
+		// Todo: This doesn't really belong in this class. Move it somewhere more appropriate.
+		private void OnStartSinglePlayer()
+		{
+			// Hooked up in the editor.
+			onStartSinglePlayer?.Invoke();
 		}
 	}
 }

@@ -39,7 +39,7 @@ void AddCurrentFrameVision (uint3 threadId : SV_DispatchThreadID)
     {
         for (int y = 0; y < pixelsPerThread; y++)
         {
-            localPixel = threadId * pixelsPerThread + int2(x, y);
+            localPixel = threadId.xy * pixelsPerThread + int2(x, y);
 
             // Sample the entire current frame vision texture.
             targetUv.xy = (int2)((localPixel / virtualThreadCount) * currentFrameVisionTexSize);
